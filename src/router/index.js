@@ -1,5 +1,8 @@
+// Vue构造哈数
 import Vue from 'vue'
+// 导入路由
 import VueRouter from 'vue-router'
+// 导入组件 · home 是一个普通组件
 import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -13,10 +16,8 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    // 组件的懒加载，当访问 /about 页面的时候才导入加载这个 js 文件页面
+    component: () => import('../views/About.vue')
   }
 ]
 
