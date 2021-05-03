@@ -15,6 +15,13 @@
           placeholder="手机号码"
           :rules="[{ required: true, message: '请填写手机号码' }]"
         />
+        <!-- 昵称输入框 -->
+        <van-field
+          v-model="form.nickname"
+          name="nickname"
+          placeholder="昵称"
+          :rules="[{ required: true, message: '请填写昵称' }]"
+        />
         <!-- 密码输入框，和上面的属性是一样的 -->
         <van-field
           v-model="form.password"
@@ -27,15 +34,15 @@
              并且按钮的 native-type="submit" 说明点击这个按钮就会触发 submit 事件-->
         <div>
           <van-button round block type="info" native-type="submit"
-            >登 录</van-button
+            >注 册</van-button
           >
         </div>
       </van-form>
 
-      <router-link to="/register">
+      <router-link to="/login">
         <div class="register">
           <van-button round block type="info" native-type="submit"
-            >注 册</van-button
+            >已有账号？去登录！</van-button
           >
         </div>
       </router-link>
@@ -60,13 +67,7 @@ export default {
     onSubmit(values) {
       console.log("submit", values);
       console.log("form", this.form);
-      // this.$axios({
-      //   url: "http://127.0.0.1:3000/login",
-      //   method: "POST",
-      //   data: this.form,
-      // }).then((response) => {
-      //   console.log(response);
-      // });
+
     },
   },
 };

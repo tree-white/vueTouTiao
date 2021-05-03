@@ -10,9 +10,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/login',
-    // 除了首页之外的页面，都可以懒加载
-    // .vue 可以忽略
-    component: () => import('@/views/Login')
+    // 除了首页之外的页面，都可以懒加载 - .vue 可以忽略
+    component: () => import('@/views/Login'), // 登录页
+  },
+  {
+    path: '/register',
+    component: () => import('@/views/Register'), // 注册页
   }
 ]
 
