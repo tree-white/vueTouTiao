@@ -16,6 +16,10 @@ const routes = [
   {
     path: '/register',
     component: () => import('@/views/Register'), // 注册页
+  },
+  {
+    path: '/user',
+    component: () => import('@/views/User'), // 注册页
   }
 ]
 
