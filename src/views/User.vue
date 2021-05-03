@@ -104,7 +104,6 @@ export default {
   }
 
   .van-cell {
-    width: ;
     padding: 0;
   }
 
