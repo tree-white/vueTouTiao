@@ -8,6 +8,8 @@
 <style lang="less">
 // css 原生的写法 - 导入线上阿里字体图库
 @import url(//at.alicdn.com/t/font_2524757_hfto3osacn.css);
+// 引入 vant 样式 - 让所有页面都可以用这个 ui 组件
+@import url('../node_modules/vant/lib/index.css');
 
 // 公共的样式
 * {

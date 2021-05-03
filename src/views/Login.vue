@@ -5,18 +5,37 @@
       <div class="iconfont icon-guanbi"></div>
       <div class="iconfont icon-new"></div>
       <div class="login">
-          <form action="#">
-              <input class="username" type="text" placeholder="用户名 / 手机号码">
-              <input class="password" type="password" placeholder="密码">
-              <input class="submit" type="submit" value="登 录">
-          </form>
+        <input class="username" type="text" placeholder="用户名 / 手机号码" v-model="form.username"> {{form.username}} {{form.password}}
+        <input class="password" type="password" placeholder="密码" v-model="form.password">
+        <input class="submit" type="submit" value="登 录" @click="handleClick">
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return {
+      form: {
+        username: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    // 点击登录按钮的时间
+    handleClick(){
+      // this.$axios({
+      //   url: 'http://127.0.0.1:3000/login',
+      //   method: 'POST',
+      //   data: this.form
+      // }).then(response => {
+      //   console.log(response);
+      // })
+    }
+  }
+};
 </script>
 
 <style lang="less">
