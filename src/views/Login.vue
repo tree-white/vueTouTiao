@@ -1,8 +1,6 @@
 <template>
   <div class="L-page">
-    <!-- 头部 -->
-    <header class="header"></header>
-    <!-- 主体 -->
+
     <div class="main">
       <div class="iconfont icon-guanbi"></div>
       <div class="iconfont icon-new"></div>
@@ -14,8 +12,6 @@
           </form>
       </div>
     </div>
-    <!-- 尾部 -->
-    <footer class="footer"></footer>
   </div>
 </template>
 
@@ -24,66 +20,51 @@ export default {};
 </script>
 
 <style lang="less">
+@color_red: #c30;
 
 .L-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 360px;
-  height: 635px;
-  border: 1px solid #ccc;
-  margin: 100px auto;
+  padding: (20 / 360 * 100vw);
+  // display: flex;
 
-  .header {
-    height: 24px;
-    background: rgba(117, 117, 117, 1);
-  }
 
   .main {
-    flex: 1;
-    padding: 20px;
 
     .icon-guanbi {
-        font-size: 24px;
+        font-size: 24 / 360 * 100vw;
     }
 
     .icon-new {
-        font-size: 150px;
+        font-size: 126 / 360 * 100vw;
         text-align: center;
-        padding: 20px;
-        color:#c30;
+        margin: 20 / 360 * 100vw;
+        color: @color_red;
     }
 
     .login {
         .username,.password {
             border: none;
             border-bottom: 1px solid black;
-            padding: 10px 0 ;
+            padding: (10 / 360 * 100vw) 0 ;
             display: block;
             width: 100%;
             border-radius: 0;
-            font-size: 18px;
-            margin-bottom: 20px
-
+            font-size: 16px;
+            margin-bottom: 20 / 360 * 100vw;
         }
 
         .submit {
             width: 100%;
-            height: 48px;
-            border-radius: 24px;
-            background: #c30;
+            height: 48 / 360 * 100vw;
+            border-radius: 24 / 360 * 100vw;
+            background: @color_red;
             border: none;
             color: #fff;
             font-size: 18px;
             cursor: pointer;
-            margin-top: 40px;
+            margin-top: 40 / 360 * 100vw;
         }
     }
   }
 
-  .footer {
-    height: 48px;
-    background: black;
-  }
 }
 </style>

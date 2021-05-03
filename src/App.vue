@@ -6,7 +6,7 @@
 </template>
 
 <style lang="less">
-// css 原生的写法
+// css 原生的写法 - 导入线上阿里字体图库
 @import url(//at.alicdn.com/t/font_2524757_hfto3osacn.css);
 
 // 公共的样式
