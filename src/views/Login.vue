@@ -1,13 +1,41 @@
 <template>
   <div class="L-page">
-
     <div class="main">
       <div class="iconfont icon-guanbi"></div>
       <div class="iconfont icon-new"></div>
-      <div class="login">
-        <input class="username" type="text" placeholder="用户名 / 手机号码" v-model="form.username"> {{form.username}} {{form.password}}
-        <input class="password" type="password" placeholder="密码" v-model="form.password">
-        <input class="submit" type="submit" value="登 录" @click="handleClick">
+      <!-- 使用 vant 表单 -->
+      <!-- van-form是表单的组件,@submit是表单按钮提交的事件 -->
+      <van-form @submit="onSubmit" class="form">
+        <!-- van-field是表单的字段 -->
+        <!-- rules是表单字段的规则，required=true 表示这个输入框是必填 -->
+        <!-- message 则如果每天弹出的信息 -->
+        <van-field
+          v-model="form.username"
+          name="username"
+          placeholder="手机号码"
+          :rules="[{ required: true, message: '请填写手机号码' }]"
+        />
+        <!-- 密码输入框，和上面的属性是一样的 -->
+        <van-field
+          v-model="form.password"
+          type="password"
+          name="password"
+          placeholder="密码"
+          :rules="[{ required: true, message: '请填写密码' }]"
+        />
+        <!-- 如果这个按钮是子啊 van-form 组件内部.
+             并且按钮的 native-type="submit" 说明点击这个按钮就会触发 submit 事件-->
+        <div>
+          <van-button round block type="info" native-type="submit"
+            >登 录</van-button
+          >
+        </div>
+      </van-form>
+
+      <div class="register">
+        <van-button round block type="info" native-type="submit"
+          >注 册</van-button
+        >
       </div>
     </div>
   </div>
@@ -15,26 +43,30 @@
 
 <script>
 export default {
-  data(){
+  data() {
     return {
       form: {
-        username: '',
-        password: ''
-      }
-    }
+        username: "",
+        password: "",
+      },
+    };
   },
   methods: {
-    // 点击登录按钮的时间
-    handleClick(){
+    // 提交表单时候触发的事件，该事件通过校验才会触发
+    // values是表单返回的值,这里的values用不上,数据可以在this.form里面获取
+    // 也可以修改 name值,就可以直接使用 values
+    onSubmit(values) {
+      console.log("submit", values);
+      console.log("form", this.form);
       // this.$axios({
-      //   url: 'http://127.0.0.1:3000/login',
-      //   method: 'POST',
-      //   data: this.form
-      // }).then(response => {
+      //   url: "http://127.0.0.1:3000/login",
+      //   method: "POST",
+      //   data: this.form,
+      // }).then((response) => {
       //   console.log(response);
-      // })
-    }
-  }
+      // });
+    },
+  },
 };
 </script>
 
@@ -45,45 +77,40 @@ export default {
   padding: (20 / 360 * 100vw);
   // display: flex;
 
-
   .main {
-
     .icon-guanbi {
-        font-size: 24 / 360 * 100vw;
+      font-size: 24 / 360 * 100vw;
     }
 
     .icon-new {
-        font-size: 126 / 360 * 100vw;
-        text-align: center;
-        margin: 20 / 360 * 100vw;
-        color: @color_red;
-    }
-
-    .login {
-        .username,.password {
-            border: none;
-            border-bottom: 1px solid black;
-            padding: (10 / 360 * 100vw) 0 ;
-            display: block;
-            width: 100%;
-            border-radius: 0;
-            font-size: 16px;
-            margin-bottom: 20 / 360 * 100vw;
-        }
-
-        .submit {
-            width: 100%;
-            height: 48 / 360 * 100vw;
-            border-radius: 24 / 360 * 100vw;
-            background: @color_red;
-            border: none;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 40 / 360 * 100vw;
-        }
+      font-size: 126 / 360 * 100vw;
+      text-align: center;
+      margin: 20 / 360 * 100vw;
+      color: @color_red;
     }
   }
 
+  .form {
+    .van-cell {
+      padding: (10 / 360 * 100vw) 0;
+      font-size: 16px;
+      margin-top: 10 / 360 * 100vw;
+    }
+
+    .van-button--info {
+      background: @color_red;
+      border: @color_red;
+      margin-top: 40 / 360 * 100vw;
+    }
+  }
+
+  .register {
+    .van-button--info {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      color: black;
+      margin-top: 10 / 360 * 100vw;
+    }
+  }
 }
 </style>
