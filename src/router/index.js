@@ -20,6 +20,12 @@ const routes = [
   {
     path: '/user',
     component: () => import('@/views/User'), // 注册页
+    children: [
+      {
+        path: 'update',
+        component: () => import('@/components/Update')
+      }
+    ]
   }
 ]
 
