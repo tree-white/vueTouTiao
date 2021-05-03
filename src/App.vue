@@ -31,4 +31,8 @@ ul, li, ol {
 i, em {
   font-style: normal;
 }
+
+input {
+  outline: none;
+}
 </style>

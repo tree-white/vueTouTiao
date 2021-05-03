@@ -3,6 +3,7 @@ import Vue from 'vue'
 // 导入路由
 import VueRouter from 'vue-router'
 
+// 注册路由的插件 · 把路由关联到 vue
 Vue.use(VueRouter)
 
 // 路由配置
