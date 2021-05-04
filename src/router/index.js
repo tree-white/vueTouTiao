@@ -7,8 +7,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 // 路由配置
-const routes = [
-  {
+const routes = [{
     path: '/login',
     // 除了首页之外的页面，都可以懒加载 - .vue 可以忽略
     component: () => import('@/views/Login'), // 登录页
@@ -20,13 +19,11 @@ const routes = [
   {
     path: '/user',
     component: () => import('@/views/User'), // 注册页
-    children: [
-      {
-        path: 'update',
-        component: () => import('@/components/Update')
-      }
-    ]
-  }
+  },
+  {
+    path: "/user/update",
+    component: () => import("@/views/Update"),
+  },
 ]
 
 const router = new VueRouter({
