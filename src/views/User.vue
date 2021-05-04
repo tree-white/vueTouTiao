@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!-- 标题 -->
-    <Titlebar title="个人中心" />
+    <Titlebar title="个人中心" showBack="true" showHome="true"/>
     <div class="userinfo">
       <!-- 头像 -->
       <div class="cover" @click="showPopup">

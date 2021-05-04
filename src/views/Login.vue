@@ -58,16 +58,18 @@ export default {
     // values是表单返回的值,这里的values用不上,数据可以在this.form里面获取
     // 也可以修改 name值,就可以直接使用 values
     onSubmit(values) {
-      console.log("submit", values);
-      console.log("form", this.form);
-      // this.$axios({
-      //   url: "http://127.0.0.1:3000/login",
-      //   method: "POST",
-      //   data: this.form,
-      // }).then((response) => {
-      //   console.log(response);
-      // });
-      this.$router.push('/user')
+      // 点击登录发送数据
+      this.$axios({
+        url: "/login",
+        method: "POST",
+        data: values,
+      }).then((response) => {
+        // console.log(response);
+        const {data: loginData} = response.data
+        console.log(loginData);
+        localStorage.setItem('userInfo', JSON.stringify(loginData))
+        this.$router.push("/user");
+      });
     },
   },
 };

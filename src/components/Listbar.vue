@@ -1,19 +1,19 @@
 <template>
+  <div>
     <router-link to="#">
-      <div class="list" >
+      <div class="list">
         <i>{{ label }}</i>
         <span> {{ tips }} <i class="iconfont icon-youjiantou"></i> </span>
       </div>
     </router-link>
+  </div>
 </template>
 
 <script>
 export default {
-    // 声明组件可以接收属性 - label=坐标文字 / tips=右边文字
-    props: ['label','tips'],
-    methods: {
-
-    }
+  // 声明组件可以接收属性 - label=坐标文字 / tips=右边文字
+  props: ["label", "tips"],
+  methods: {},
 };
 </script>
 

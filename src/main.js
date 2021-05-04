@@ -27,7 +27,18 @@ Vue.config.productionTip = false;
 // from：代表将要离开的页面
 // next：必须要调用，让中间件继续执行后面的内容。
 router.beforeEach((to, from, next) => {
-  next();
+  if (to.path == '/user') {
+    // 把本地存储的登录数据获取下来
+    const loginData = JSON.parse(localStorage.getItem('userInfo')) || {};
+    // 判断是否有 token 内容
+    if (loginData.token) {
+      next();
+    } else {
+      next('/login');
+    }
+  } else {
+    next();
+  }
 })
 
 // 创建一个根实例

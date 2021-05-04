@@ -1,7 +1,7 @@
 <template>
   <div class="updatePage">
     <!-- 头部标题 -->
-    <Titlebar title="编辑资料" />
+    <Titlebar title="编辑资料" showBack="true" />
 
     <!-- 头像 -->
     <div class="cover">
@@ -15,13 +15,33 @@
       </div>
     </div>
 
-    <!-- 修改信息 -->
+    <!-- 修改昵称 -->
     <Listbar
-      v-for="(item, index) in rows"
-      :key="index"
-      :label="item.label"
-      :tips="item.tips"
+      label="昵称"
+      :tips="nicknameEdit.nickname"
+      @click.native="handleChangeNickname"
     />
+    <!-- vant组件 - Dialog弹出框-->
+    <van-dialog
+      v-model="nicknameEdit.show"
+      title="修改昵称"
+      show-cancel-button
+      @cancel="nicknameEdit.value = ''"
+      @confirm="nicknameEdit.nickname = nicknameEdit.value"
+    >
+    <!-- vant组件 - field输入框 -->
+      <van-cell-group>
+        <van-field
+          v-model="nicknameEdit.value"
+          :placeholder="nicknameEdit.nickname"
+        />
+      </van-cell-group>
+    </van-dialog>
+
+    <!-- 修改密码 -->
+    <Listbar label="密码" tips="******" />
+    <!-- 修改性别 -->
+    <Listbar label="性别" tips="男" />
   </div>
 </template>
 
@@ -32,16 +52,20 @@ import Listbar from "@/components/Listbar";
 export default {
   data() {
     return {
+      nicknameEdit: { nickname: "火星网友", show: false, value: "" },
+      passwaodEdit: {},
+      genderEdit: {},
       fileList: [],
       popupShow: false,
-      rows: [
-        { label: "昵称", tips: "火星网友" },
-        { label: "密码", tips: "******" },
-        { label: "性别", tips: "男" },
-      ],
     };
   },
-  methods: {},
+  methods: {
+    handleChangeNickname() {
+      this.nicknameEdit.value = ''
+      console.log("点击了修改昵称");
+      this.nicknameEdit.show = true;
+    },
+  },
   components: {
     Titlebar,
     Listbar,
@@ -71,5 +95,4 @@ export default {
     font-size: 18 / 360 * 100vw;
   }
 }
-
 </style>
