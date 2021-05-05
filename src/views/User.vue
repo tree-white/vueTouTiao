@@ -9,14 +9,14 @@
           class="icon-cover"
           fit="cover"
           radius="50%"
-          src="https://img01.yzcdn.cn/vant/cat.jpeg"
+          :src="'http://127.0.0.1:3000' + userData.head_img"
         />
       </div>
-
-      <!-- 模态框 显示/隐藏-->
+      <!-- 头像模态框 显示/隐藏-->
       <van-popup v-model="popupShow">
-        <van-image fit="fill" src="https://img01.yzcdn.cn/vant/cat.jpeg" />
+        <van-image fit="fill" :src="'http://127.0.0.1:3000' + userData.head_img" />
       </van-popup>
+
 
       <!-- 信息/编辑 -->
       <div class="msg" @click="editClick">
@@ -24,12 +24,12 @@
         <div class="particulars">
           <div class="up">
             <!-- 性别提示 -->
-            <span class="iconfont icon-nan"></span>
+            <span :class="'iconfont '+ ['icon-nv', 'icon-nan'][userData.gender]"></span>
             <!-- 网名 -->
-            <em>火星网友</em>
+            <em>{{ userData.nickname }}</em>
           </div>
           <div class="down">
-            <span>2021-05-03</span>
+            <span>{{ moment(userData.create_date).format('YYYY-MM-DD') }}</span>
           </div>
         </div>
         <!-- 右侧 -->
@@ -37,6 +37,7 @@
       </div>
     </div>
 
+    <!-- 跳转功能叶 -->
     <div class="lists">
       <!-- 组件的调用，单双标签都可以 -->
       <!-- :key 不是报错，可以不加 -->
@@ -65,10 +66,30 @@
 // 导入(components)里面的小组件 - 然后去components注册组件
 import Listbar from "@/components/Listbar";
 import Titlebar from "@/components/Titlebar";
+import moment from "moment";
 
 export default {
+  // 进入个人中心后，加载完毕即发起请求获取用户数据
+  mounted(){
+    const loginData = JSON.parse(localStorage.getItem('userInfo'));
+    // 获取用户的(token)密令
+    const { token: Authorization } = loginData
+    // 获取用户的(id)传递到动态参数里面
+    this.$axios({
+      url: "/user/" + loginData.user.id,
+      headers : { Authorization }
+
+    }).then(response => {
+      this.userData = response.data.data
+      // console.log("userData",this.userData);
+    })
+  },
+
+  // 组件数据
   data() {
     return {
+      moment,
+      userData: {} ,
       popupShow: false,
       selectShow: false,
       // 组织一个列表按钮兰的数据
@@ -80,11 +101,11 @@ export default {
       ],
     };
   },
+
   // 注册组件
-  components: {
-    Listbar,
-    Titlebar,
-  },
+  components: { Listbar, Titlebar, },
+
+  // 方法
   methods: {
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
@@ -150,11 +171,16 @@ export default {
       flex-direction: column;
       justify-content: space-evenly;
 
-      .icon-nan {
+      .icon-nan,.icon-nv {
         margin-right: 5 / 360 * 100vw;
         color: skyblue; // 头像的样色，后期设置性别需要修改该颜色
         font-size: 18px;
       }
+
+      .icon-nv {
+        color: pink;
+      }
+
 
       .down {
         font-size: 18px;

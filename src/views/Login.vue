@@ -59,15 +59,21 @@ export default {
     // 也可以修改 name值,就可以直接使用 values
     onSubmit(values) {
       // 点击登录发送数据
+      this.$toast.loading({
+        message: "登录中...",
+        forbidClick: true,
+      });
       this.$axios({
         url: "/login",
         method: "POST",
         data: values,
       }).then((response) => {
         // console.log(response);
-        const {data: loginData} = response.data
+        const { data: loginData } = response.data;
         console.log(loginData);
-        localStorage.setItem('userInfo', JSON.stringify(loginData))
+        loginData.user.password = this.form.password;
+        localStorage.setItem("userInfo", JSON.stringify(loginData));
+        this.$toast.success("登录成功");
         this.$router.push("/user");
       });
     },
