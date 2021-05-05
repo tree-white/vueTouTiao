@@ -26,8 +26,12 @@ const routes = [{
   },
   {
     path: "/user/follow",
-    component: () => import("@/views/Follow"), // 个人关注页面
-  }
+    component: () => import("@/views/Follow"), // 我的关注页面
+  },
+  {
+    path: "/user/comment",
+    component: () => import("@/views/Comment"), // 我的跟帖页面
+  },
 ]
 
 const router = new VueRouter({

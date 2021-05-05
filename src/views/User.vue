@@ -96,7 +96,7 @@ export default {
       actions: [{ name: "退 出 登 录", id: 1 }],
       rows: [
         { label: "我的关注", tips: "关注的用户", path: "/user/follow" },
-        { label: "我的跟帖", tips: "跟帖/回复", path: "" },
+        { label: "我的跟帖", tips: "跟帖/回复", path: "/user/comment" },
         { label: "我的收藏", tips: "文章视频", path: "" },
       ],
     };
