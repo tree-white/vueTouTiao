@@ -13,8 +13,10 @@ import axios from "axios";
 // 在组件上的 this.$xxx 都是在 原型对象上的方法
 Vue.prototype.$axios = axios;
 
-// 给 axios 添加基地址，添加后请求的url就会自动拼接这个基地址
+// 给 axios 添加基地址，添加后请求的url就会自动拼接这个基地址(本地数据库)
 axios.defaults.baseURL = 'http://localhost:3000';
+// 线上数据库
+// axios.defaults.baseURL = 'http://hmtoutiao-api.atlansic.com';
 
 // 注册 vant 插件 （Vue.use都是用来注册插件的）
 Vue.use(Vant);

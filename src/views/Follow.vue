@@ -4,24 +4,71 @@
     <Titlebar title="我的关注" showBack="true" />
 
     <!-- 要循环的结构 -->
-    <div class="user-item">
-      <img
-        src="http://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
-      />
+    <div class="user-item" v-for="(item, index) in myFollows" :key="index">
+      <img :src="$axios.defaults.baseURL + item.head_img" />
       <div class="user-info">
-        <div>火星网友</div>
-        <p>2021-05-05</p>
+        <div>{{ item.nickname }}</div>
+        <p>{{ moment(item.create_date).format("YYYY-MM-DD hh:mm:ss") }}</p>
       </div>
-      <span class="cancel">取消关注</span>
+      <span class="cancel" @click="handleUnfollow(item.id)">取消关注</span>
     </div>
   </div>
 </template>
 
 <script>
 import Titlebar from "@/components/Titlebar";
+import moment from "moment";
 
 export default {
+  mounted() {
+    const { token: Authorization, user } = JSON.parse(
+      localStorage.getItem("userInfo")
+    );
+
+    this.Authorization = Authorization;
+    // 调用关注列表请求
+    this.handleUpdateFollowList();
+  },
+  data() {
+    return {
+      moment,
+      Authorization: "",
+      myFollows: [],
+    };
+  },
   components: { Titlebar },
+  methods: {
+    // 取消关注，参数id是模版传递过来的用户id
+    handleUnfollow(id) {
+      this.$dialog
+        .confirm({
+          title: "温馨提示",
+          message: "确定要取消关注吗？",
+        })
+        .then(() => {
+          // 根据id取消用户的关注
+          this.$axios({
+            url: "/user_unfollow/" + id,
+            headers: { Authorization: this.Authorization },
+          }).then((response) => {
+            this.$toast.success("取消关注成功");
+            this.handleUpdateFollowList();
+          });
+        }).catch((e)=> {console.log('取消操作');})
+    },
+
+    // 封装获取用户的函数
+    handleUpdateFollowList() {
+      return this.$axios({
+        url: "/user_follows",
+        headers: { Authorization: this.Authorization },
+      }).then((response) => {
+        const { data } = response.data;
+        this.myFollows = data;
+        console.log("我的关注", this.myFollows);
+      });
+    },
+  },
 };
 </script>
 
