@@ -47,7 +47,7 @@
         :key="index"
         :label="item.label"
         :tips="item.tips"
-        to=""
+        :path="item.path"
       />
 
       <!-- 点击(设置)弹出动作面板 -->
@@ -95,9 +95,9 @@ export default {
       // 组织一个列表按钮兰的数据
       actions: [{ name: "退 出 登 录", id: 1 }],
       rows: [
-        { label: "我的关注", tips: "关注的用户" },
-        { label: "我的跟帖", tips: "跟帖/回复" },
-        { label: "我的收藏", tips: "文章视频" },
+        { label: "我的关注", tips: "关注的用户", path: "/user/follow" },
+        { label: "我的跟帖", tips: "跟帖/回复", path: "" },
+        { label: "我的收藏", tips: "文章视频", path: "" },
       ],
     };
   },
