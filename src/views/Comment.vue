@@ -1,26 +1,34 @@
 <template>
   <div>
     <!-- 头部 -->
-    <Titlebar title="'我的跟帖" showBack="true" />
+    <Titlebar title="我的跟帖" showBack="true" />
 
     <!-- 跟帖内容 -->
-    <div class="comment-item">
+    <div class="comment-item" v-for="(item, index) in comments" :key="index">
       <!-- 时间 -->
-      <div class="date">2021-05-06 02:24</div>
+      <div class="date">
+        {{ moment(item.create_date).format("YYYY-MM-DD hh:mm") }}
+      </div>
       <!-- 已回复的内容 -->
-      <div class="commented">
-        <div class="commented-user">回复：火星彩票研究员</div>
+      <div class="commented" v-if="item.parent">
+        <div class="commented-user">回复：{{ item.parent.user.nickname }}</div>
         <div class="commented-content">
-          阿信是张信哲吗？张信哲是不是张学友的弟弟啊？
+          {{ item.parent.content }}
         </div>
       </div>
       <!-- 自己最新的回复 -->
-      <div class="comment-new">张信哲不是张学友的弟弟啊！</div>
+      <div class="comment-new">{{ item.content }}</div>
       <!-- 原文链接 -->
       <router-link to="#" class="link-post">
-        <div>原文：阿信分享《说好不哭》幕后故事阿萨德艾弗森a</div>
+        <div>原文：{{ item.post.title }}</div>
         <span class="iconfont icon-youjiantou"></span>
       </router-link>
+    </div>
+
+    <!-- 更多跟帖 -->
+    <div class="other-comments">
+      <span>更多跟帖</span>
+      <span class="iconfont icon-shuangyoujiantou-"></span>
     </div>
   </div>
 </template>
@@ -28,8 +36,30 @@
 <script>
 // 导入头部组件
 import Titlebar from "@/components/Titlebar";
+// 导入日期格式组件
+import moment from "moment";
 
 export default {
+  mounted() {
+    const { token: Authorization, user } = JSON.parse(
+      localStorage.getItem("userInfo")
+    );
+    // 请求数据
+    this.$axios({
+      url: "/user_comments",
+      headers: { Authorization },
+    }).then((response) => {
+      console.log(response);
+      this.comments = response.data.data;
+      console.log(this.comments);
+    });
+  },
+  data() {
+    return {
+      moment,
+      comments: [],
+    };
+  },
   // 注册组件
   components: { Titlebar },
 };
@@ -62,6 +92,7 @@ export default {
   .link-post {
     color: #999;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     div {
       white-space: nowrap;
@@ -69,10 +100,18 @@ export default {
       text-overflow: ellipsis;
       -o-text-overflow: ellipsis;
     }
+  }
+}
+// 更多跟帖
+.other-comments {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40/360 * 100vw;
+  color: #777;
 
-    span {
-
-    }
+  .icon-shuangyoujiantou- {
+    margin-left: 10px;
   }
 }
 </style>
