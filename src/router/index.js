@@ -32,6 +32,10 @@ const routes = [{
     path: "/user/comment",
     component: () => import("@/views/Comment"), // 我的跟帖页面
   },
+  {
+    path: "/user/collect",
+    component: () => import("@/views/Collect"), // 我的收藏页面
+  }
 ]
 
 const router = new VueRouter({
