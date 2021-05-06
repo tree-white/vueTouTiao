@@ -5,7 +5,7 @@
       <div class="iconfont icon-new"></div>
       <!-- 使用 vant 表单 -->
       <!-- van-form是表单的组件,@submit是表单按钮提交的事件 -->
-      <van-form @submit="onSubmit" class="form">
+      <van-form submit-on-enter @submit="onSubmit" class="form">
         <!-- van-field是表单的字段 -->
         <!-- rules是表单字段的规则，required=true 表示这个输入框是必填 -->
         <!-- message 则如果每天弹出的信息 -->
@@ -45,7 +45,7 @@
 
 <script>
 export default {
-  
+
   data() {
     return {
       form: {
