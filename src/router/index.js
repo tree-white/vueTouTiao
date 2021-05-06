@@ -8,33 +8,62 @@ Vue.use(VueRouter)
 
 // 路由配置
 const routes = [{
+    // 登录页
     path: '/login',
     // 除了首页之外的页面，都可以懒加载 - .vue 可以忽略
-    component: () => import('@/views/Login'), // 登录页
+    component: () => import('@/views/Login'),
   },
   {
+    // 注册页
     path: '/register',
-    component: () => import('@/views/Register'), // 注册页
+    component: () => import('@/views/Register'),
   },
   {
+    // 个人中心
     path: '/user',
-    component: () => import('@/views/User'), // 注册页
+    component: () => import('@/views/User'),
+    // 路由可以通过meta自定义数据，可以选择路由随意加上自己的数据
+    // 它的值可以是任意的类型
+    meta: {
+      // 代表这个页面需要授权
+      authorization: true
+    },
   },
   {
+    // 个人编辑页面
     path: "/user/update",
-    component: () => import("@/views/Update"), // 个人编辑页面
+    component: () => import("@/views/Update"),
+    meta: {
+      // 代表这个页面需要授权
+      authorization: true
+    },
   },
   {
+    // 我的关注页面
     path: "/user/follow",
-    component: () => import("@/views/Follow"), // 我的关注页面
+    component: () => import("@/views/Follow"),
+    meta: {
+      // 代表这个页面需要授权
+      authorization: true
+    },
   },
   {
+    // 我的跟帖页面
     path: "/user/comment",
-    component: () => import("@/views/Comment"), // 我的跟帖页面
+    component: () => import("@/views/Comment"),
+    meta: {
+      // 代表这个页面需要授权
+      authorization: true
+    },
   },
   {
+    // 我的收藏页面
     path: "/user/collect",
-    component: () => import("@/views/Collect"), // 我的收藏页面
+    component: () => import("@/views/Collect"),
+    meta: {
+      // 代表这个页面需要授权
+      authorization: true
+    },
   }
 ]
 

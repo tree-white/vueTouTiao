@@ -4,30 +4,30 @@
     <Titlebar title="我的收藏" showBack="true" />
 
     <!-- 循环的结构，少于3张图片的布局 -->
-    <div class="collect-oneImg">
-      <div class="oneImg-left">
-        <h4>林志玲穿透视黑纱裙米兰看秀腹部微秀腹部微秀腹部微隆显孕味</h4>
-        <span>火星时报</span>
-        <span>52跟帖</span>
+    <div v-for="(item, index) in collectData" :key="index">
+      <div class="collect-oneImg" v-if="item.cover.length == 1">
+        <div class="oneImg-left">
+          <h4>{{ item.title }}</h4>
+          <span>{{ item.user.nickname }}</span>
+          <span>{{ item.comments }}跟帖</span>
+        </div>
+        <img :src="$axios.defaults.baseURL + item.cover[0].url" />
       </div>
-      <img
-        src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
-      />
-    </div>
 
-    <!-- 循环的结构，大于3张图片的布局 -->
-    <div class="collect-manyImg">
-      <h4>林志玲穿透视黑纱裙米兰看秀腹部微秀腹部微秀腹部秀腹部微秀腹部秀腹部微秀腹部微隆显孕味</h4>
-      <div class="images">
-        <img
-          src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
-          v-for="(item, index) in [0, 1, 2]"
-          :key="index"
-        />
-      </div>
-      <div class="manyImg-left">
-        <span>火星时报</span>
-        <span>52跟帖</span>
+      <!-- 循环的结构，大于3张图片的布局 -->
+      <div class="collect-manyImg" v-else-if="item.cover.length > 1">
+        <h4>{{ item.title }}</h4>
+        <div class="images">
+          <img
+            v-for="(item, index) in item.cover"
+            :key="index"
+            :src="$axios.defaults.baseURL + item.url"
+          />
+        </div>
+        <div class="manyImg-left">
+          <span>{{ item.user.nickname }}</span>
+          <span>{{ item.comments }}跟帖</span>
+        </div>
       </div>
     </div>
   </div>
@@ -38,6 +38,27 @@
 import Titlebar from "@/components/Titlebar";
 
 export default {
+  mounted() {
+    // 获取用户的(token)密令
+    const { token: Authorization } = JSON.parse(
+      localStorage.getItem("userInfo")
+    );
+    // 发起请求获取收藏列表
+    this.$axios({
+      url: "/user_star",
+      headers: { Authorization },
+    }).then((response) => {
+      const { data } = response.data;
+      this.collectData = data;
+    });
+  },
+
+  data() {
+    return {
+      collectData: [],
+    };
+  },
+
   components: { Titlebar },
 };
 </script>
@@ -60,6 +81,7 @@ export default {
     width: 121 / 360 * 100vw;
     height: 75 / 360 * 100vw;
     object-fit: cover;
+    flex-shrink: 0;
   }
 }
 
@@ -83,7 +105,7 @@ span {
   padding: 20 / 360 * 100vw;
   border-bottom: 1px solid #eee;
   h4 {
-      margin: 0;
+    margin: 0;
   }
 
   .images {
