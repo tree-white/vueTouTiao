@@ -3,8 +3,33 @@
     <!-- 收藏揶表头 -->
     <Titlebar title="我的收藏" showBack="true" />
 
-    <!-- 列表显示 -->
-    <PostItemAll :arrData="collectData"/>
+    <!-- 循环的结构，少于3张图片的布局 -->
+    <div v-for="(item, index) in collectData" :key="index">
+      <div class="collect-oneImg" v-if="item.cover.length == 1">
+        <div class="oneImg-left">
+          <h4>{{ item.title }}</h4>
+          <span>{{ item.user.nickname }}</span>
+          <span>{{ item.comments }}跟帖</span>
+        </div>
+        <img :src="$axios.defaults.baseURL + item.cover[0].url" />
+      </div>
+
+      <!-- 循环的结构，大于3张图片的布局 -->
+      <div class="collect-manyImg" v-else-if="item.cover.length > 1">
+        <h4>{{ item.title }}</h4>
+        <div class="images">
+          <img
+            v-for="(item, index) in item.cover"
+            :key="index"
+            :src="$axios.defaults.baseURL + item.url"
+          />
+        </div>
+        <div class="manyImg-left">
+          <span>{{ item.user.nickname }}</span>
+          <span>{{ item.comments }}跟帖</span>
+        </div>
+      </div>
+    </div>
     
   </div>
 </template>
@@ -12,8 +37,6 @@
 <script>
 // 导入表头
 import Titlebar from "@/components/Titlebar";
-// 导入列表
-import PostItemAll from "@/components/PostItem_All";
 
 export default {
   mounted() {
@@ -37,8 +60,7 @@ export default {
     };
   },
 
-
-  components: { Titlebar, PostItemAll },
+  components: { Titlebar },
 };
 </script>
 

@@ -1,25 +1,32 @@
 <template>
   <div>
-      <OneImg />
+    <div v-for="(item, index) in arrData" :key="index">
+      <OneImg v-if="item.type == 1 && item.cover.length == 1" :data="item"/>
 
-      <ManyImg />
+      <ManyImg v-else-if="item.type == 1 && item.cover.length > 1" :data="item" />
 
-      <Video />
+      <Video v-else-if="item.type == 2" :data="item"/>
+    </div>
   </div>
 </template>
 
 <script>
 // 引入 3个 请求列表组件
-import OneImg from "@/components/PostItem_OneImg"
-import ManyImg from "@/components/PostItem_ManyImg"
-import Video from "@/components/PostItem_Video"
-
+import OneImg from "@/components/PostItem_OneImg";
+import ManyImg from "@/components/PostItem_ManyImg";
+import Video from "@/components/PostItem_Video";
 
 export default {
-    components: { OneImg, ManyImg, Video }
-}
+  mounted() {},
+  props: ["arrData"],
+  watch: {
+    arrData() {
+      console.log(this.arrData);
+    },
+  },
+  components: { OneImg, ManyImg, Video },
+};
 </script>
 
 <style>
-
 </style>

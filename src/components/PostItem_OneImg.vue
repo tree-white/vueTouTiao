@@ -4,12 +4,12 @@
     <div>
       <div class="collect-oneImg">
         <div class="oneImg-left">
-          <h4>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</h4>
-          <span>火星时报</span>
-          <span>52跟帖</span>
+          <h4>{{ data.title }}</h4>
+          <span>{{ data.user.nickname }}</span>
+          <span>{{ data.comments }}跟帖</span>
         </div>
         <img
-          src="https://img-nos.yiyouliao.com/inforec-20210506-938f3a1bcfca0ddc27a914887ed80fa7.jpg?time=1620314216&signature=272A79830C73D83E8DFE93F5CE1A5C18"
+          :src=" $axios.defaults.baseURL + data.cover[0].url "
         />
       </div>
     </div>
@@ -18,7 +18,9 @@
 
 <script>
 // 该组件显示只有单张图片的！！！
-export default {};
+export default {
+  props: ['data']
+};
 </script>
 
 <style scoped lang="less">
