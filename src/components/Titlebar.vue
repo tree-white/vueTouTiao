@@ -2,7 +2,7 @@
   <div class="hearder">
     <span
       class="iconfont icon-zuojiantou"
-      @click="$router.back()"
+      @click="$router.replace(fromPath)"
       v-if="showBack"
     ></span>
     <span v-else class="iconfont icon-zuojiantou" style="opacity: 0"></span>
@@ -20,9 +20,15 @@
 
 <script>
 export default {
+  mounted(){
+    this.fromPath = localStorage.getItem('fromPath');
+    
+  },
   props: ["title", "showBack", "showHome"],
   data() {
-    return {};
+    return {
+      fromPath: '',
+    };
   },
 };
 </script>

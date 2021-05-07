@@ -24,38 +24,52 @@
     <section class="section">
       <van-tabs v-model="active" sticky swipeable>
         <van-tab v-for="(item, index) in navData" :title="item" :key="index">
-          <div>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-            <p>内容 {{ item }}</p>
-          </div>
+          <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+            <van-list
+              v-model="loading"
+              :finished="finished"
+              finished-text="没有更多了"
+              @load="onLoad"
+            >
+              <!-- 单张图的列表 -->
+              <PostAll />
+              <!-- 2-3张图的列表 -->
+              <!-- <PostManyImg /> -->
+              <!-- 视频列表 -->
+              <!-- <PostVideo /> -->
+            </van-list>
+          </van-pull-refresh>
         </van-tab>
         <van-tab title="V"></van-tab>
       </van-tabs>
     </section>
-
-    <!-- 单张图的列表 -->
-    <PostOneImg/>
-    <!-- 2-3张图的列表 -->
-    <PostManyImg/>
   </div>
 </template>
 
 <script>
-// 文章列表的组件 - 单张图片组件
-import PostOneImg from "@/components/PostItem_OneImg";
-// 文章列表的组件 - 2-3张图片组件
-import PostManyImg from "@/components/PostItem_ManyImg";
+// 文章列表的组件
+import PostAll from "@/components/PostItem_All";
 
 export default {
+  // 进来则自动获取文章列表
+  mounted() {
+      const {token: Authorization } = JSON.parse(localStorage.getItem("userInfo")) || "";
+      console.log(Authorization ? "有密令" : '没有密令');
+
+    this.$axios({
+      url: "/post",
+      headers: {Authorization}
+    }).then((response) => {
+      console.log("请求返回的内容：",response);
+      console.log("请求返回的内容里的data：",response.data);
+    });
+  },
   data() {
     return {
+      refreshing: false,
+      list: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      loading: false,
+      finished: false,
       // 菜单的数据
       navData: [
         "关注",
@@ -80,17 +94,49 @@ export default {
       active: 0,
     };
   },
+  methods: {
+    onLoad() {
+      // 异步更新数据
+      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.list = [];
+          this.refreshing = false;
+        }
+
+        for (let i = 0; i < 10; i++) {
+          this.list.push(this.list.length + 1);
+        }
+
+        // 加载状态结束
+        this.loading = false;
+
+        // 数据全部加载完成
+        if (this.list.length >= 40) {
+          this.finished = true;
+        }
+      }, 1000);
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false;
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true;
+      this.onLoad();
+    },
+  },
   watch: {
     active() {
-      console.log(this.active);
+      //   console.log(this.active); // 测试点击了哪个tab
       // 如果点击的是最后一个图标，跳珠啊难道栏目管理业
       if (this.active === this.navData.length) {
-        console.log("点击了”最后一个跳转“");
         this.$router.push("/栏目管理业");
       }
     },
   },
-  components: { PostOneImg, PostManyImg },
+  components: { PostAll },
 };
 </script>
 

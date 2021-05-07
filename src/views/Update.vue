@@ -184,7 +184,8 @@ export default {
     },
 
     // 修改昵称点击事件
-    handleEditNickname() {
+    handleEditNickname(e) {
+      console.log(e);
       // 打开模态框先清空先前输入的内容
       this.nicknameEdit.nickname = "";
       // 显示模态框
