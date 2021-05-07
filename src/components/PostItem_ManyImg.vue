@@ -2,28 +2,25 @@
   <div>
     <!-- 循环的结构，2-3张图片的布局 -->
     <div class="collect-manyImg">
-      <h4>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</h4>
+      <h4>{{ data.title }}</h4>
       <div class="images">
         <img
-          src="https://img-nos.yiyouliao.com/inforec-20210506-938f3a1bcfca0ddc27a914887ed80fa7.jpg?time=1620314216&signature=272A79830C73D83E8DFE93F5CE1A5C18"
-        />
-        <img
-          src="https://img-nos.yiyouliao.com/inforec-20210506-938f3a1bcfca0ddc27a914887ed80fa7.jpg?time=1620314216&signature=272A79830C73D83E8DFE93F5CE1A5C18"
-        />
-        <img
-          src="https://img-nos.yiyouliao.com/inforec-20210506-938f3a1bcfca0ddc27a914887ed80fa7.jpg?time=1620314216&signature=272A79830C73D83E8DFE93F5CE1A5C18"
+          v-for="(item, index) in data.cover" :key="index"
+          :src="$axios.defaults.baseURL + item.url"
         />
       </div>
       <div class="manyImg-left">
-        <span>火星时报</span>
-        <span>52跟帖</span>
+        <span>{{ data.user.nickname }}</span>
+        <span>{{ data.comments }}跟帖</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["data"]
+};
 </script>
 
 <style scoped lang="less">
