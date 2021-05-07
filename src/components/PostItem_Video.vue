@@ -2,16 +2,13 @@
   <div>
     <!-- 循环结构 - 视频列表组件 -->
     <div class="collect-video">
-
-        <!-- 标题 -->
-      <h4>
-        林志玲穿透视黑纱裙米兰看秀腹部微隆显黑纱裙米兰看秀腹部微隆显黑纱裙米兰看秀腹部微隆显黑纱裙米兰看秀腹部微隆显孕味
-      </h4>
+      <!-- 标题 -->
+      <h4>{{ data.title }}</h4>
 
       <!-- 封面图片 -->
       <div class="video-cover">
         <img
-          src="https://img-nos.yiyouliao.com/inforec-20210506-938f3a1bcfca0ddc27a914887ed80fa7.jpg?time=1620314216&signature=272A79830C73D83E8DFE93F5CE1A5C18"
+          :src="$axios.defaults.baseURL + data.cover[0].url"
         />
         <!-- 播放按钮 -->
         <div class="playBtn">
@@ -21,15 +18,17 @@
 
       <!-- 作者 - 跟帖量 -->
       <div>
-        <span>火星时报</span>
-        <span>52跟帖</span>
+        <span>{{ data.user.nickname }}</span>
+        <span>{{ data.comments }}跟帖</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["data"],
+};
 </script>
 
 <style scoped lang="less">
@@ -59,17 +58,17 @@ export default {};
     }
 
     .playBtn {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background: rgba(255,255,255,.2);
-        .icon-shipin {
-            font-size: 46 / 360 * 100vw;
-            color: #fff;
-            margin: 0;
-        }
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      .icon-shipin {
+        font-size: 46 / 360 * 100vw;
+        color: #fff;
+        margin: 0;
+      }
     }
   }
 
