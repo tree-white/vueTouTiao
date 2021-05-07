@@ -1,7 +1,7 @@
 <template>
   <div class="L-page">
     <div class="main">
-      <div class="iconfont icon-guanbi"></div>
+      <div class="iconfont icon-guanbi" @click="$router.replace('/')"></div>
       <div class="iconfont icon-new"></div>
       <!-- 使用 vant 表单 -->
       <!-- van-form是表单的组件,@submit是表单按钮提交的事件 -->

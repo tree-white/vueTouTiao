@@ -22,8 +22,15 @@
     <!-- v-model：就是当前的索引值，是唯一的，类似于for循环的key -->
     <!-- sticky：使用粘性布局 -->
     <section class="section">
+      <!-- 顶部下拉刷新 -->
       <van-tabs v-model="active" sticky swipeable>
-        <van-tab v-for="(item, index) in navData" :title="item" :key="index">
+        <!-- 底部下拉刷新 -->
+        <van-tab
+          v-for="(item, index) in category"
+          :title="item.name"
+          :key="index"
+        >
+          <!-- tab栏 -->
           <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
             <van-list
               v-model="loading"
@@ -31,20 +38,19 @@
               finished-text="没有更多了"
               @load="onLoad"
             >
-              <!-- 单张图的列表 -->
-              <PostAll />
-              <!-- 2-3张图的列表 -->
-              <!-- <PostManyImg /> -->
-              <!-- 视频列表 -->
-              <!-- <PostVideo /> -->
+              <!-- 列表组件 -->
+              <!-- 传入的是需要渲染的数组 -->
+              <PostAll :arrData="list" />
             </van-list>
           </van-pull-refresh>
         </van-tab>
-        <van-tab title="V"></van-tab>
+        <van-tab title="Ｖ"></van-tab>
       </van-tabs>
     </section>
   </div>
 </template>
+
+
 
 <script>
 // 文章列表的组件
@@ -53,69 +59,125 @@ import PostAll from "@/components/PostItem_All";
 export default {
   // 进来则自动获取文章列表
   mounted() {
-      const {token: Authorization } = JSON.parse(localStorage.getItem("userInfo")) || "";
-      console.log(Authorization ? "有密令" : '没有密令');
+    console.log("------------------- ↓ 刷新了 Index.vue 页面 ↓ ------------------------");
 
-    this.$axios({
-      url: "/post",
-      headers: {Authorization}
-    }).then((response) => {
-      console.log("请求返回的内容：",response);
-      console.log("请求返回的内容里的data：",response.data);
-    });
+    const { token: Authorization } = JSON.parse(localStorage.getItem("userInfo")) || {};
+    console.log(Authorization ? "有密令！" : "没有密令！");
+
+    // 调用请求列表数据
+    this.getList(Authorization);
+
+    // 请求前先判断本地是否有栏目数据
+    const { data: category } = JSON.parse(localStorage.getItem("category")) || [];
+
+    this.category = category;
+    console.log("列表栏数据:",this.category);
+
+    // 有本地数据时-进行判断
+    if (category) {
+      // 有登录/但本地数据没关注
+      if (Authorization && category[0].name !== "关注") {
+        console.log("有（本地数据）有（token）但没（关注分类）!");
+        this.getCategory(Authorization);
+      }
+
+      // 没登录/但本地数据有关注
+      if (!Authorization && category[0].name === "关注") {
+        console.log("有（本地数据）没（token）但有（关注分类）");
+        this.getCategory();
+      }
+
+      this.handleCategories();
+      console.log("所有栏目添加pageIndex后：",this.category);
+    }
+    // 没本地数据的时候则直接请求
+    else {
+      this.getCategory(Authorization);
+      console.log("没有本地数据");
+    }
   },
+
   data() {
     return {
       refreshing: false,
-      list: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      list: [],
+      total: 1,
       loading: false,
       finished: false,
       // 菜单的数据
-      navData: [
-        "关注",
-        "头条",
-        "娱乐",
-        "体育",
-        "汽车",
-        "房产",
-        "娱乐",
-        "体育",
-        "汽车",
-        "房产",
-        "体育",
-        "汽车",
-        "房产",
-        "房产",
-        "体育",
-        "汽车",
-        "房产",
-      ],
+      category: [],
+      categoryID: 999,
       // 会记录当前的值
-      active: 0,
+      active: 1,
     };
   },
   methods: {
+    // 循环给栏目加上 pageIndex，每个栏目都是自己的pageIndex
+    handleCategories(){
+        this.category.forEach(v => v.pageIndex = 1)
+    },
+
+    // 获取菜单
+    getCategory(Authorization = "") {
+      // 请求栏目列表
+      this.$axios({
+        url: "/category",
+        headers: { Authorization },
+      }).then((resposne) => {
+        // 打印输出获取逇菜单数据
+        console.log("获取栏目成功：", resposne.data.data);
+        // 把菜单的数据保存到本地
+        localStorage.setItem("category", JSON.stringify(resposne.data));
+        // 渲染本地数据
+        this.category = resposne.data.data
+        // 给每个栏目添加一个 pageIndex
+        this.handleCategories();
+      });
+    },
+
+    // 请求数据列表
+    getList(Authorization = "") {
+      // 请求数据列表
+      this.$axios({
+        url: "/post",
+        params: {
+            category: this.categoryID
+        },
+        headers: { Authorization },
+
+
+      }).then((response) => {
+        console.log("请求返回的内容：", response);
+        console.log("请求返回的内容里的data：", response.data);
+        //   this.arrData = response.data.data;
+        this.list = response.data.data;
+        this.total = response.data.total;
+        console.log("总页数：",this.total);
+      });
+    },
+
     onLoad() {
+        // 加载下一页设定
+
+
+
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = [];
-          this.refreshing = false;
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
-        }
-
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
+      //   setTimeout(() => {
+      //     if (this.refreshing) {
+      //       this.list = [];
+      //       this.refreshing = false;
+      //     }
+      //     for (let i = 0; i < 10; i++) {
+      //       this.list.push(this.list.length + 1);
+      //     }
+      //     // 加载状态结束
+      //     this.loading = false;
+      //     // 数据全部加载完成
+      //     if (this.list.length >= 40) {
+      //       this.finished = true;
+      //     }
+      //   }, 1000);
     },
     onRefresh() {
       // 清空列表数据
@@ -131,7 +193,8 @@ export default {
     active() {
       //   console.log(this.active); // 测试点击了哪个tab
       // 如果点击的是最后一个图标，跳珠啊难道栏目管理业
-      if (this.active === this.navData.length) {
+      console.log(this.active);
+      if (this.active === this.category.length) {
         this.$router.push("/栏目管理业");
       }
     },

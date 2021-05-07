@@ -114,6 +114,7 @@ export default {
       if (item.id === 1) {
         this.$router.replace("/login");
       }
+      localStorage.removeItem("userInfo")
     },
     showPopup() {
       this.popupShow = true;
