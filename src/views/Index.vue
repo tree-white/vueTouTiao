@@ -134,7 +134,7 @@ export default {
         v.finished = false; // 每个栏目都添加一个文章是否全部加载完毕的状态
         v.loading = false; // 每个栏目都添加是否正在请求的状态
         v.scrollY = 0; // 给每个栏目添加一个滚动条的高度
-        v.isload = 0; // 当前栏目是否正在请求
+        v.isload = false; // 当前栏目是否正在请求
         return v;
       });
 
@@ -174,7 +174,16 @@ export default {
     // 获取文章列表
     getList() {
       // 当前栏目的id,pageIndex,finished
-      const { id, pageIndex, finished, name } = this.category[this.active];
+      const { id, pageIndex, finished, name, isload } = this.category[
+        this.active
+      ];
+      // 如果当前正在加载，直接返回(节流阀作用)
+      if (isload) return;
+      // 开启节流阀
+      this.category[this.active].isload = true;
+      // 给当前的栏目页数+1
+      this.category[this.active].pageIndex += 1;
+
       // 如果数据已经加载完毕到了最后一页，就直接return
       if (finished) return;
       // 请求文章的配置
@@ -213,17 +222,14 @@ export default {
         }
 
         console.log(this.category[this.active]);
+
+        // 关闭节流阀
+        this.category[this.active].isload = false;
       });
     },
 
     // 底部刷新触发事件
     onLoad() {
-      // 给当前的栏目页数+1
-      this.category[this.active].pageIndex += 1;
-      console.log(
-        "onLoad里的pageIndex：",
-        this.category[this.active].pageIndex
-      );
       // 请求文章的列表
       this.getList();
     },
@@ -236,7 +242,7 @@ export default {
       // srcollTop 是滚动条的距离
       this.category[this.active].scrollY = scrollTop;
       // 把滚动条的高度赋值给当前栏目下的scrollY
-    //   console.log("已滚动的高度：", this.category[this.active].scrollY);
+      //   console.log("已滚动的高度：", this.category[this.active].scrollY);
     },
   },
 
@@ -264,9 +270,9 @@ export default {
 
       // 需要等待文章数据的渲染，渲染完成之后才进行滚动
       setTimeout(() => {
-          // 页面滚动到当前栏目下的scrollY值
-          window.scrollTo(0, this.category[this.active].scrollY)
-      }, 10)
+        // 页面滚动到当前栏目下的scrollY值
+        window.scrollTo(0, this.category[this.active].scrollY);
+      }, 10);
     },
   },
 };
