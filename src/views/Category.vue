@@ -49,8 +49,10 @@ export default {
       uncheckArr: [],
     };
   },
+
   // 注册组件
   components: { Titlebar },
+
   // 组件加载完毕后触发
   mounted() {
     // 获取本地的栏目数据
@@ -68,22 +70,41 @@ export default {
     console.log(this.checkArr);
     console.log(this.uncheckArr);
   },
+  // 页面销毁时触发
+  destroyed() {
+    // 把栏目的数据保存到本地
+    this.categories = [
+      ...this.checkArr,
+      ...this.uncheckArr,
+      this.categories[this.categories.length - 1],
+    ];
+    const str = JSON.stringify(this.categories);
+    localStorage.setItem("category", str);
+  },
   methods: {
-      // 点击删除栏目，也就是上面栏目的事件
-      handleDel(item, index){
-          // 如果是头条或者关注，就无效
-          if(['关注', '头条'].includes(item.name)) return;
+    // 点击删除栏目，也就是上面栏目的事件
+    handleDel(item, index) {
+      // 如果是头条或者关注，就无效
+      if (["关注", "头条"].includes(item.name)) return;
 
-          // 把当前这项从checkArr中删除掉
-          this.checkArr.splice(index, 1);
+      // 把当前这项从checkArr中删除掉
+      this.checkArr.splice(index, 1);
 
-          // 修改当前点击栏目的is_top为0
-          item.is_top = 0;
-          // 保存到下面的数组中
-          this.uncheckArr.push(item);
-
-      }
-  }
+      // 修改当前点击栏目的is_top为0
+      item.is_top = 0;
+      // 保存到下面的数组中
+      this.uncheckArr.push(item);
+    },
+    // 点击添加栏目，也就是下面栏目的事件
+    handleAdd(item, index) {
+      // 先从this.uncheckArr数组中删除这项
+      this.uncheckArr.splice(index, 1);
+      // 修改当前点击栏目的is_top为1
+      item.is_top = 1;
+      // 把当前这项追加到checkArr数组中
+      this.checkArr.push(item);
+    },
+  },
 };
 </script>
 
