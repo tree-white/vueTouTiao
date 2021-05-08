@@ -41,6 +41,30 @@
         <li class="history-item">美女</li>
         <li class="history-item">美女</li>
       </ul>
+
+      <!-- 结果的浮层 -->
+      <ul class="supernatant-list">
+        <li class="supernatant-item">
+          <p>搜索结果的浮层搜索结果的浮层</p>
+          <span class="iconfont icon-youjiantou"></span>
+        </li>
+        <li class="supernatant-item">
+          <p>搜索结果的浮层搜索结果的浮层</p>
+          <span class="iconfont icon-youjiantou"></span>
+        </li>
+        <li class="supernatant-item">
+          <p>搜索结果的浮层搜索结果的浮层搜索结果的浮层搜索结果的浮层</p>
+          <span class="iconfont icon-youjiantou"></span>
+        </li>
+        <li class="supernatant-item">
+          <p>搜索结果的浮层搜索结果的浮层</p>
+          <span class="iconfont icon-youjiantou"></span>
+        </li>
+        <li class="supernatant-item">
+          <p>搜索结果的浮层搜索结果的浮层</p>
+          <span class="iconfont icon-youjiantou"></span>
+        </li>
+      </ul>
     </section>
   </div>
 </template>
@@ -81,7 +105,7 @@ export default {};
     #search {
       border: 0;
       padding-left: 5 / 360 * 100vw;
-      font-size: 14px;
+      font-size: 14 / 360 * 100vw;
     }
   }
 }
@@ -90,7 +114,6 @@ export default {};
 .history {
   margin: 0 10 / 360 * 100vw;
   padding: 10 / 360 * 100vw 0;
-  border-bottom: 1px solid #ccc;
 
   .title {
     display: flex;
@@ -100,32 +123,70 @@ export default {};
     padding: 0 10 / 360 * 100vw;
     .clear {
       background: rgba(0, 0, 0, 0.1);
-      padding: 2px 10px;
-      border-radius: 50px;
-      height: 14px;
-      line-height: 14px;
-      font-size: 14px;
+      padding: 2 / 360 * 100vw 10 / 360 * 100vw;
+      border-radius: 50 / 360 * 100vw;
+      height: 14 / 360 * 100vw;
+      line-height: 14 / 360 * 100vw;
+      font-size: 14 / 360 * 100vw;
       color: #333;
 
       .icon-guanbi {
-        font-size: 10px;
-        margin-right: 5px;
+        font-size: 10 / 360 * 100vw;
+        margin-right: 5 / 360 * 100vw;
       }
     }
   }
 
+  // 历史记录
   .history-list {
-      display: flex;
-      flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10 / 360 * 100vw;
 
-      .history-item {
-          font-size: 12px;
-          padding:1px 10 / 360 * 100vw ;
-          border-radius: 100px;
-          border: 1px solid #ddd;
-          margin: 5 / 360 * 100vw 10 / 360 * 100vw;
-          background: #eee;
+    .history-item {
+      font-size: 12 / 360 * 100vw;
+      padding: 1 / 360 * 100vw 10 / 360 * 100vw;
+      border-radius: 100px;
+      border: 1 / 360 * 100vw solid #ddd;
+      margin: 5 / 360 * 100vw 10 / 360 * 100vw;
+      background: #eee;
+    }
+  }
+
+  // 浮层
+  .supernatant-list {
+    position: absolute;
+    top: 50 / 360 * 100vw;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff; // 暂时的遮罩层
+    // display: none; // 隐藏遮罩层
+    padding: 20 / 360 * 100vw;
+    padding-top: 10 / 360 * 100vw;
+
+    .supernatant-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10 / 360 * 100vw 0;
+      border-bottom: 1px solid #ccc;
+      font-size: 14 / 360 * 100vw;
+      align-items: center;
+
+      p {
+        flex: 1;
+        // 超出省略号
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
+
+      .icon-youjiantou {
+        color: #ccc;
+        font-size: 16 / 360 * 100vw;
+      }
+    }
   }
 }
 </style>
