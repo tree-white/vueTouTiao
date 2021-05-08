@@ -9,8 +9,14 @@ Vue.use(VueRouter)
 // 路由配置
 const routes = [
   {
+    // 首页
     path: '/',
     component: () => import("@/views/Index")
+  },
+  {
+    // 首页的管理页面
+    path: "/category",
+    component: () => import("@/views/Category"),
   },
   {
     // 登录页
@@ -69,7 +75,8 @@ const routes = [
       // 代表这个页面需要授权
       authorization: true
     },
-  }
+  },
+
 ]
 
 const router = new VueRouter({

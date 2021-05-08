@@ -26,6 +26,7 @@
       <van-tabs v-model="active" sticky swipeable @scroll="handleScroll">
         <van-tab
           v-for="(item, index) in category"
+          v-if="item.is_top === 1 || item.name == 'Ｖ'"
           :key="index"
           :title="item.name"
         >
@@ -56,7 +57,7 @@
         </van-tab>
 
         <!-- 最后跳转管理标签页面 -->
-        <van-tab title="Ｖ"></van-tab>
+        <!-- <van-tab title="Ｖ" @change="handleCategoryPage"></van-tab> -->
       </van-tabs>
     </section>
   </div>
@@ -121,7 +122,8 @@ export default {
       // tab栏默认选中的分类
       active: 0,
 
-      // loading: false,
+      // 控制获取的列表数据条数
+      pageSize: 10,
     };
   },
 
@@ -140,7 +142,7 @@ export default {
 
       // 请求文章列表数据
       this.getList();
-      console.log("处理栏目数据后：", this.category);
+      console.log("页面加载完成-处理栏目数据后的列表数据：", this.category);
     },
 
     // 获取菜单
@@ -157,9 +159,13 @@ export default {
       this.$axios(config).then((resposne) => {
         // 把栏目数据data解构
         const { data } = resposne.data;
+        // 在数组最后添加进入栏目管理页面的符号
+        data.push({ name: "Ｖ" });
 
         // 把栏目数据保存到this.category
         this.category = data;
+
+        // 在栏目最后添加 v
 
         // 把栏目数据保存到本地存储
         localStorage.setItem("category", JSON.stringify(data));
@@ -191,7 +197,7 @@ export default {
         url: "/post",
         params: {
           pageIndex: pageIndex, // 没一栏的页数是不一样的
-          pageSize: 5, // 请求数据的条数
+          pageSize: this.pageSize, // 请求数据的条数
           category: id,
         },
       };
@@ -252,18 +258,15 @@ export default {
   // 监听当前点击的分类是哪一个
   watch: {
     active() {
-      // 获取当前点击的栏目索引号
-      //   console.log("点击了category中索引号为：", this.active);
+      // 先过去出is_top等于1的或者是v图片的栏目
+      const arr = this.category.filter(v =>{
+          return v.is_top || v.name === "Ｖ"
+      })
 
       // 如果点击的是(V)则跳转到栏目管理页面
-      if (this.category && this.active === this.category.length) {
-        this.$router.push("/栏目管理");
-        return;
+      if (this.active === arr.length - 1) {
+        this.$router.push("/category");
       }
-
-      // 获取当前栏目的id
-      console.log("索引号：", this.active);
-      console.log("栏目的ID：", this.category[this.active].id);
 
       // 当栏目切换时，重新请求栏目数据
       this.getList();
