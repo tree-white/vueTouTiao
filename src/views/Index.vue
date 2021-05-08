@@ -5,7 +5,7 @@
       <!-- 左边 new -->
       <div class="iconfont icon-new"></div>
       <!-- 中间搜索框 -->
-      <router-link to="#" class="search-cont">
+      <router-link to="/search" class="search-cont">
         <div class="search">
           <span class="iconfont icon-search"></span>
           <span>搜索新闻</span>
@@ -136,7 +136,7 @@ export default {
         v.finished = false; // 每个栏目都添加一个文章是否全部加载完毕的状态
         v.loading = false; // 每个栏目都添加是否正在请求的状态
         v.scrollY = 0; // 给每个栏目添加一个滚动条的高度
-        v.isload = false; // 当前栏目是否正在请求
+        v.isload = false; // 当前栏目是否正在请求(节流阀)
         return v;
       });
 
