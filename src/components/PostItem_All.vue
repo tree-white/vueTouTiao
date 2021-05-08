@@ -21,7 +21,7 @@ export default {
   props: ["arrData"],
   watch: {
     arrData() {
-      console.log("PostItem_All组件要渲染的内容：",this.arrData);
+      // console.log("PostItem_All组件要渲染的内容：",this.arrData);
       this.arrData.forEach(item => {
         item.comments = item.comment_length
       })

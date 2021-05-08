@@ -18,7 +18,7 @@ axios.defaults.baseURL = 'http://localhost:3000';
 // 线上数据库
 // axios.defaults.baseURL = 'http://hmtoutiao-api.atlansic.com';
 
-// 注册 vant 插件 （Vue.use都是用来注册插件的）
+// 注册 Vant 插件 （Vue.use都是用来注册插件的）
 Vue.use(Vant);
 
 // 上线环境是否提示信息（忽略）
