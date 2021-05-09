@@ -24,6 +24,10 @@ const routes = [
     component: () => import("@/views/Search"),
   },
   {
+    path: "/post/:id",
+    component: () => import("@/views/Post"),
+  },
+  {
     // 登录页
     path: '/login',
     // 除了首页之外的页面，都可以懒加载 - .vue 可以忽略

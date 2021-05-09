@@ -1,25 +1,28 @@
 <template>
   <div>
-    <!-- 循环的结构，2-3张图片的布局 -->
-    <div class="collect-manyImg">
-      <h4>{{ data.title }}</h4>
-      <div class="images">
-        <img
-          v-for="(item, index) in data.cover" :key="index"
-          :src="$axios.defaults.baseURL + item.url"
-        />
+    <router-link :to="`/post/${data.id}`">
+      <!-- 循环的结构，2-3张图片的布局 -->
+      <div class="collect-manyImg">
+        <h4>{{ data.title }}</h4>
+        <div class="images">
+          <img
+            v-for="(item, index) in data.cover"
+            :key="index"
+            :src="$axios.defaults.baseURL + item.url"
+          />
+        </div>
+        <div class="manyImg-left">
+          <span>{{ data.user.nickname }}</span>
+          <span>{{ data.comments }}跟帖</span>
+        </div>
       </div>
-      <div class="manyImg-left">
-        <span>{{ data.user.nickname }}</span>
-        <span>{{ data.comments }}跟帖</span>
-      </div>
-    </div>
+    </router-link>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["data"]
+  props: ["data"],
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 循环的结构，1张图片的布局 -->
-    <div>
+      <router-link :to="`/post/${data.id}`">
       <div class="collect-oneImg">
         <div class="oneImg-left">
           <h4>{{ data.title }}</h4>
@@ -12,7 +12,7 @@
           :src=" $axios.defaults.baseURL + data.cover[0].url "
         />
       </div>
-    </div>
+      </router-link>
   </div>
 </template>
 
