@@ -1,7 +1,7 @@
 <template>
   <div class="L-page">
     <div class="main">
-      <div class="iconfont icon-guanbi" @click="$router.replace('/')"></div>
+      <div class="iconfont icon-guanbi" @click="$router.replace(return_url || '/')"></div>
       <div class="iconfont icon-new"></div>
       <!-- 使用 vant 表单 -->
       <!-- van-form是表单的组件,@submit是表单按钮提交的事件 -->
@@ -45,6 +45,9 @@
 
 <script>
 export default {
+  mounted(){
+
+  },
 
   data() {
     return {
@@ -52,6 +55,7 @@ export default {
         username: "",
         password: "",
       },
+      return_url: this.$route.query.return_url,
     };
   },
   methods: {
@@ -69,13 +73,18 @@ export default {
         method: "POST",
         data: values,
       }).then((response) => {
-        // console.log(response);
+        // 解构出登录信息
         const { data: loginData } = response.data;
-        console.log(loginData);
+        // 登录成功把登录时写的密码也传到loginData数据中
         loginData.user.password = this.form.password;
+        // 把用户登录信息存储到本地
         localStorage.setItem("userInfo", JSON.stringify(loginData));
+        // 提示登录成功
         this.$toast.success("登录成功");
-        this.$router.push("/user");
+
+        // 判断地址栏有没有(return_url)参数，有则跳转到这个路径，没有则跳转用户中心(user)
+
+        this.$router.replace(this.return_url || "/user");
       });
     },
   },
