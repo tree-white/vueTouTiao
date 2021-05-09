@@ -50,19 +50,39 @@
       </ul>
 
       <!-- 结果的浮层 -->
-      <ul class="supernatant-list" v-if="false">
-        <li class="supernatant-item">
+      <ul class="supernatant-list" v-if="showLayer">
+        <!-- 渲染浮层搜索到的内容 -->
+        <PostAll :arrData="list" />
+
+        <div class="empty" v-if="list.length === 0">
+            没有找到你搜索的内容
+        </div>
+        <!-- <li class="supernatant-item">
           <p>搜索结果的浮层搜索结果的浮层</p>
           <span class="iconfont icon-youjiantou"></span>
-        </li>
+        </li> -->
       </ul>
     </section>
   </div>
 </template>
 
 <script>
+import PostAll from "@/components/PostItem_All";
+
 export default {
-  mounted() {},
+  components: { PostAll },
+
+  watch: {
+      value(){
+          // 如果搜索内容=空
+          if(!this.value.trim()) {
+              // 清空文章列表
+              this.list = [];
+              // 浮层清空
+              this.showLayer = false;
+          }
+      }
+  },
 
   data() {
     return {
@@ -70,27 +90,61 @@ export default {
       value: "",
       // 历史数据 - 把本地历史数据添加到本地
       history: JSON.parse(localStorage.getItem("history")) || [],
+      // 文章列表
+      list: [],
+      // 是否展示浮层
+      showLayer: false,
     };
   },
 
   methods: {
+    // 点击搜索按钮或者输入框按下回车触发
     handleSearch() {
       console.log("点击了搜索：", this.value);
-      // 把当前的搜索关键字添加到数组中第一位
-      this.history.unshift(this.value);
-      // 去重
-      this.history = [...new Set(this.history)];
-      // 把搜索关键字添加到本地
-      localStorage.setItem("history", JSON.stringify(this.history));
+      // 去掉前后空格
+      this.value = this.value.trim();
+      if (this.value) {
+        // 把当前的搜索关键字添加到数组中第一位
+        this.history.unshift(this.value);
+        // 去重
+        this.history = [...new Set(this.history)];
+        // 把搜索关键字添加到本地
+        localStorage.setItem("history", JSON.stringify(this.history));
+        // 调用接口开始搜索
+        this.getList();
+      } else {
+        this.$toast.fail("搜索内容\n不能为空");
+      }
     },
 
+    // 点击清除按钮触发清除输入框内容和本地存储内容
     handleClear() {
       this.history = [];
       localStorage.removeItem("history");
     },
 
+    // 点击历史记录输入框会自动显示隶属记录内容
     handleSearchHistory(item) {
       this.value = item;
+      this.getList();
+    },
+
+    // 调用接口发起搜索请求 - 多次调用所以封装成函数
+    getList() {
+      this.$axios({
+        url: "/post_search",
+        params: {
+          keyword: this.value,
+        },
+      }).then((res) => {
+        console.log(res);
+        // 显示浮层
+        this.showLayer = true;
+        // data 是文章列表
+        const { data } = res.data;
+        // 保存到data中的list
+        this.list = data;
+      });
     },
   },
 };
@@ -185,8 +239,14 @@ export default {
     left: 0;
     right: 0;
     background: #fff; // 暂时的遮罩层
-    padding: 20 / 360 * 100vw;
+    // padding: 20 / 360 * 100vw;
     padding-top: 10 / 360 * 100vw;
+
+    .empty {
+        text-align: center;
+        color: #999;
+        margin-top:20 / 360 * 100vw ;
+    }
 
     .supernatant-item {
       display: flex;
