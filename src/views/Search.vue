@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--搜索栏 -->
-    <header class="header" @touchmove.prevent>
+    <header class="header">
       <!-- 退出搜索返回上一层 -->
       <div class="iconfont icon-zuojiantou"></div>
 
@@ -13,53 +13,44 @@
         </label>
 
         <!-- 搜索框 -->
-        <input type="text" placeholder="请输入搜索关键字" id="search" />
+        <!-- @keyup.enter 是键盘事件中回车键的事件 -->
+        <input
+          type="text"
+          placeholder="请输入搜索关键字"
+          id="search"
+          v-model="value"
+          @keyup.enter="handleSearch"
+        />
       </div>
 
       <!-- 搜索按钮 -->
-      <span class="btn">搜索</span>
+      <span class="btn" @click="handleSearch">搜索</span>
     </header>
 
     <!-- 历史记录 -->
     <section class="history">
       <div class="title">
         <strong>历史记录</strong>
-        <div class="clear">
+        <!-- 清空本地的搜索记录 -->
+        <div class="clear" @click="handleClear">
           <span class="iconfont icon-guanbi"></span>
           <em>清除</em>
         </div>
       </div>
 
       <ul class="history-list">
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
-        <li class="history-item">美女</li>
+        <li
+          class="history-item"
+          v-for="(item, index) in history"
+          :key="index"
+          @click="handleSearchHistory(item)"
+        >
+          {{ item }}
+        </li>
       </ul>
 
       <!-- 结果的浮层 -->
-      <ul class="supernatant-list">
-        <li class="supernatant-item">
-          <p>搜索结果的浮层搜索结果的浮层</p>
-          <span class="iconfont icon-youjiantou"></span>
-        </li>
-        <li class="supernatant-item">
-          <p>搜索结果的浮层搜索结果的浮层</p>
-          <span class="iconfont icon-youjiantou"></span>
-        </li>
-        <li class="supernatant-item">
-          <p>搜索结果的浮层搜索结果的浮层搜索结果的浮层搜索结果的浮层</p>
-          <span class="iconfont icon-youjiantou"></span>
-        </li>
-        <li class="supernatant-item">
-          <p>搜索结果的浮层搜索结果的浮层</p>
-          <span class="iconfont icon-youjiantou"></span>
-        </li>
+      <ul class="supernatant-list" v-if="false">
         <li class="supernatant-item">
           <p>搜索结果的浮层搜索结果的浮层</p>
           <span class="iconfont icon-youjiantou"></span>
@@ -70,7 +61,39 @@
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {},
+
+  data() {
+    return {
+      // 搜索内容
+      value: "",
+      // 历史数据 - 把本地历史数据添加到本地
+      history: JSON.parse(localStorage.getItem("history")) || [],
+    };
+  },
+
+  methods: {
+    handleSearch() {
+      console.log("点击了搜索：", this.value);
+      // 把当前的搜索关键字添加到数组中第一位
+      this.history.unshift(this.value);
+      // 去重
+      this.history = [...new Set(this.history)];
+      // 把搜索关键字添加到本地
+      localStorage.setItem("history", JSON.stringify(this.history));
+    },
+
+    handleClear() {
+      this.history = [];
+      localStorage.removeItem("history");
+    },
+
+    handleSearchHistory(item) {
+      this.value = item;
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
@@ -162,7 +185,6 @@ export default {};
     left: 0;
     right: 0;
     background: #fff; // 暂时的遮罩层
-    // display: none; // 隐藏遮罩层
     padding: 20 / 360 * 100vw;
     padding-top: 10 / 360 * 100vw;
 
