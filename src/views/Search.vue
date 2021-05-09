@@ -3,7 +3,7 @@
     <!--搜索栏 -->
     <header class="header">
       <!-- 退出搜索返回上一层 -->
-      <div class="iconfont icon-zuojiantou"></div>
+      <div class="iconfont icon-zuojiantou" @click="$router.back(fromPath)"></div>
 
       <!-- 中间的搜索框 -->
       <div class="search-wrapper">
@@ -20,6 +20,7 @@
           id="search"
           v-model="value"
           @keyup.enter="handleSearch"
+          autofocus
         />
       </div>
 
@@ -94,6 +95,8 @@ export default {
       list: [],
       // 是否展示浮层
       showLayer: false,
+      // 跳转过来的页面
+      fromPath: localStorage.getItem('fromPath') || '',
     };
   },
 

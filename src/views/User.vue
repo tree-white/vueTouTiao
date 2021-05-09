@@ -9,12 +9,12 @@
           class="icon-cover"
           fit="cover"
           radius="50%"
-          :src="'http://127.0.0.1:3000' + userData.head_img"
+          :src="$axios.defaults.baseURL + userData.head_img"
         />
       </div>
       <!-- 头像模态框 显示/隐藏-->
       <van-popup v-model="popupShow">
-        <van-image fit="fill" :src="'http://127.0.0.1:3000' + userData.head_img" />
+        <van-image fit="fill" :src="$axios.defaults.baseURL + userData.head_img" />
       </van-popup>
 
 

@@ -10,7 +10,7 @@
           class="icon-cover"
           fit="cover"
           radius="50%"
-          :src="'http://127.0.0.1:3000' + userData.head_img"
+          :src="$axios.defaults.baseURL + userData.head_img"
         />
       </div>
       <van-uploader
