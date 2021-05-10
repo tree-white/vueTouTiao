@@ -35,7 +35,6 @@ Vue.config.productionTip = false;
 // tp：代表即将要访问的页面
 // from：代表将要离开的页面
 // next：必须要调用，让中间件继续执行后面的内容。
-
 router.beforeEach((to, from, next) => {
   localStorage.setItem('fromPath', from.path)
   // 需要验证的页面

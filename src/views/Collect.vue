@@ -8,7 +8,7 @@
     
   </div>
 </template>
-
+详情
 <script>
 // 导入表头
 import Titlebar from "@/components/Titlebar";

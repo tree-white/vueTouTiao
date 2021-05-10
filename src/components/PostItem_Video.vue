@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link :to="`/video/${data.id}`">
     <!-- 循环结构 - 视频列表组件 -->
     <div class="collect-video">
       <!-- 标题 -->
@@ -22,6 +23,7 @@
         <span>{{ data.comments }}跟帖</span>
       </div>
     </div>
+    </router-link>
   </div>
 </template>
 

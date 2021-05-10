@@ -1,9 +1,12 @@
 <template>
-  <div>
+  <div class="container">
     <!--搜索栏 -->
     <header class="header">
       <!-- 退出搜索返回上一层 -->
-      <div class="iconfont icon-zuojiantou" @click="$router.back(fromPath)"></div>
+      <div
+        class="iconfont icon-zuojiantou"
+        @click="$router.back(fromPath)"
+      ></div>
 
       <!-- 中间的搜索框 -->
       <div class="search-wrapper">
@@ -55,9 +58,7 @@
         <!-- 渲染浮层搜索到的内容 -->
         <PostAll :arrData="list" />
 
-        <div class="empty" v-if="list.length === 0">
-            没有找到你搜索的内容
-        </div>
+        <div class="empty" v-if="list.length === 0">没有找到你搜索的内容</div>
         <!-- <li class="supernatant-item">
           <p>搜索结果的浮层搜索结果的浮层</p>
           <span class="iconfont icon-youjiantou"></span>
@@ -71,18 +72,38 @@
 import PostAll from "@/components/PostItem_All";
 
 export default {
+  // 局部路由守卫
+  // tp：代表即将要访问的页面
+  // from：代表将要离开的页面
+  // next：必须要调用，让中间件继续执行后面的内容。
+  beforeRouteEnter(to, from, next) {
+    console.log(from);
+
+    next((vm) => {
+      // 如果是从首页进来的，就把数据初始化
+      if (from.path === "/") {
+        // 隐藏浮层
+        vm.showLayer = false;
+        // 清空关键字
+        vm.value = "";
+      }
+    });
+  },
+
+  name: "search",
+
   components: { PostAll },
 
   watch: {
-      value(){
-          // 如果搜索内容=空
-          if(!this.value.trim()) {
-              // 清空文章列表
-              this.list = [];
-              // 浮层清空
-              this.showLayer = false;
-          }
+    value() {
+      // 如果搜索内容=空
+      if (!this.value.trim()) {
+        // 清空文章列表
+        this.list = [];
+        // 浮层清空
+        this.showLayer = false;
       }
+    },
   },
 
   data() {
@@ -96,7 +117,7 @@ export default {
       // 是否展示浮层
       showLayer: false,
       // 跳转过来的页面
-      fromPath: localStorage.getItem('fromPath') || '',
+      fromPath: localStorage.getItem("fromPath") || "",
     };
   },
 
@@ -154,9 +175,28 @@ export default {
 </script>
 
 <style scoped lang="less">
+.container {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  &::before {
+    display: block;
+    content: "";
+    height: 60/ 360 * 100vw;
+  }
+}
 // 头部搜索栏样式
 .header {
-  padding: 5 / 360 * 100vw 10/ 360 * 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: #fff;
+  padding: 10 / 360 * 100vw 10/ 360 * 100vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -246,9 +286,9 @@ export default {
     padding-top: 10 / 360 * 100vw;
 
     .empty {
-        text-align: center;
-        color: #999;
-        margin-top:20 / 360 * 100vw ;
+      text-align: center;
+      color: #999;
+      margin-top: 20 / 360 * 100vw;
     }
 
     .supernatant-item {

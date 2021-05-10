@@ -73,6 +73,7 @@ import ManyImg from "@/components/PostItem_ManyImg";
 import Video from "@/components/PostItem_Video";
 
 export default {
+  name: "index",
   // 进来则自动获取文章列表
   mounted() {
     console.log("------------- ↓ 刷新了 Index.vue 页面 ↓ -----------------");
