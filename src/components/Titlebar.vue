@@ -7,7 +7,7 @@
     ></span>
     <span v-else class="iconfont icon-zuojiantou" style="opacity: 0"></span>
 
-    <a href="javascript:;">{{ title ? title : "还未写标题" }}</a>
+    <a href="javascript:;" style="font-weight: 700;">{{ title ? title : "还未写标题" }}</a>
 
     <span
       class="iconfont icon-shouye"

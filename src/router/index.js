@@ -7,8 +7,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 // 路由配置
-const routes = [
-  {
+const routes = [{
     // 首页
     path: '/',
     component: () => import("@/views/Index")
@@ -27,6 +26,11 @@ const routes = [
     // 文章详情页
     path: "/post/:id",
     component: () => import("@/views/Post"),
+  },
+  {
+    // 视频详情页
+    path: "/post-comment/:id",
+    component: () => import("@/views/PostComment"),
   },
   {
     // 视频详情页

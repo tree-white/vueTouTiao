@@ -2,7 +2,9 @@
   <div class="Post-Comment-component">
     <!-- 底部固定栏 -->
     <footer class="footer">
-      <input type="text" placeholder="发布评论" class="comment-input" />
+      <router-link :to="`/post-comment/${post.id}`" class="comment-input">发布评论</router-link>
+
+      <!-- 评论入口 -->
 
       <div class="comment-number">
         <div class="iconfont icon-pinglun"></div>
