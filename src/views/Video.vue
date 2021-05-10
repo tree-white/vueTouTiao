@@ -2,6 +2,7 @@
   <div>
     <!-- 视频 -->
     <video
+    v-if="post.content"
       :src="$axios.defaults.baseURL + post.content"
       controls="controls"
       width="100%"
@@ -55,7 +56,7 @@
     </div>
 
     <!-- 底部固定栏 -->
-    <PostFooter :getPost="post" :token="token"/>
+    <PostFooter :getPost="post" />
 
 
     <!-- vant 分享面板 -->

@@ -53,14 +53,14 @@
     </div>
 
     <!-- 底部固定栏 -->
-    <PostFooter :getPost="post" :token="token"/>
+    <PostFooter :getPost="post" />
 
     <!-- vant 分享面板 -->
     <van-share-sheet
       v-model="showShare"
       title="立即分享给好友"
       :options="options"
-    />  
+    />
   </div>
 </template>
 
@@ -70,7 +70,7 @@ import moment from "moment";
 // 导入底部栏组件
 import PostFooter from "@/components/Post_Footer";
 export default {
-  components: {PostFooter},
+  components: { PostFooter },
 
   data() {
     return {
@@ -85,9 +85,9 @@ export default {
       showShare: false,
       options: [
         { name: "微信", icon: "wechat" },
-        { name: '朋友圈', icon: 'wechat-moments' },
+        { name: "朋友圈", icon: "wechat-moments" },
         { name: "微博", icon: "weibo" },
-        { name: 'QQ', icon: 'qq' },
+        { name: "QQ", icon: "qq" },
         { name: "复制链接", icon: "link" },
         { name: "分享海报", icon: "poster" },
         { name: "二维码", icon: "qrcode" },
@@ -111,6 +111,12 @@ export default {
     // 请求文章详情
     this.$axios(config).then((res) => {
       const { data } = res.data;
+      // 替换文字内容里面的本地路径，把localhost:3000替换成基准路径
+      data.content = data.content.replace(
+        /http:\/\/localhost:3000/ig,
+        this.$axios.defaults.baseURL
+      );
+
       this.post = data;
     });
   },
@@ -249,7 +255,6 @@ export default {
 }
 
 .like_check {
-color: red;
+  color: red;
 }
-
 </style>

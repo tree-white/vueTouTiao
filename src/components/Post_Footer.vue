@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  props: ["getPost", "token"],
+  props: ['getPost'],
   watch: {
       getPost(){
           this.post = this.getPost
@@ -61,9 +61,12 @@ export default {
   methods: {
     // 收藏 / 取消收藏
     handleStar() {
+      // 本地的token
+      const {token} = JSON.parse(localStorage.getItem("userInfo")) || {};
+      
       this.$axios({
         url: "/post_star/" + this.post.id,
-        headers: { Authorization: this.token },
+        headers: { Authorization: token },
       }).then((res) => {
         console.log(res);
         // 修改点赞的状态

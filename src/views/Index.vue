@@ -74,6 +74,14 @@ import Video from "@/components/PostItem_Video";
 
 export default {
   name: "index",
+
+  // activated只对keep-alive的组件有用，当组件每次被渲染时候才会执行
+  // 和mounted不一样，mounted只会执行一次
+  activated() {
+    // 初始化active,如果是从栏目管理页面回来首页，则回到第一个栏目
+    if (localStorage.getItem("fromPath") === "/category") this.active = 0;
+  },
+
   // 进来则自动获取文章列表
   mounted() {
     console.log("------------- ↓ 刷新了 Index.vue 页面 ↓ -----------------");
@@ -260,9 +268,9 @@ export default {
   watch: {
     active() {
       // 先过去出is_top等于1的或者是v图片的栏目
-      const arr = this.category.filter(v =>{
-          return v.is_top || v.name === "Ｖ"
-      })
+      const arr = this.category.filter((v) => {
+        return v.is_top || v.name === "Ｖ";
+      });
 
       // 如果点击的是(V)则跳转到栏目管理页面
       if (this.active === arr.length - 1) {
