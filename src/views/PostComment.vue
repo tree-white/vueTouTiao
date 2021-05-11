@@ -59,8 +59,9 @@
         class="textarea"
         :class="isFocus ? 'active' : ''"
         id="textarea"
-        @focus="isFocus = true"
-        @blur="isFocus = false"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @keyup.enter="handleSubmit"
       />
 
       <!-- 右边编辑按钮，当选中输入框则隐藏 -->
@@ -69,7 +70,7 @@
       </label>
 
       <!-- 发送按钮，当选中输入框的时候显示 -->
-      <span class="send" v-show="isFocus">发布</span>
+      <span class="send" v-show="isFocus" @click="handleSubmit">发布</span>
     </div>
   </div>
 </template>
@@ -146,6 +147,56 @@ export default {
     // 触发加载事件
     onLoad() {
       this.getList();
+    },
+
+    // 点击"发布评论"按钮触发
+    handleSubmit(){
+      // 发送前先判断内容是否为空
+      const content = this.message.trim();
+      if(!content) {
+        this.$toast.fail('发布内容不能为空！');
+        return;
+      }
+
+      // 获取用户的授权信息
+      const {token} = JSON.parse(localStorage.getItem('userInfo')) || {};
+
+      // 发布评论请求
+      this.$axios({
+        url: '/post_comment/' + this.pid,
+        method: 'POST',
+        headers: {Authorization: token},
+        data: {content}
+      }).then(res => {
+        // 发布成功后的信息
+        this.$toast.success(res.data.message)
+        // 清空输入框的内容
+        this.message = '';
+
+        // 把页数回调到1
+        // this.pageIndex = 1;
+        // 更新数据
+        // this.getList();
+
+        // 手动更新数据
+        this.list = []; // 必须要清空，如果不清空会合并之前的评论数据
+        this.pageIndex = 1; // 把请求页数设置成第一页
+        this.getList(); // 获取列表数据
+        
+      })
+    },
+
+    // 输入框获得焦点触发
+    handleFocus(){
+      this.isFocus = true;
+    },
+
+    // 输入框数去焦点触发
+    handleBlur(){
+      // 失去焦点需要有一个延时，异步处理，否则无法触发发送的点击事件。
+      setTimeout(()=>{
+        this.isFocus = false;
+      },30)
     },
   },
 };
@@ -232,7 +283,7 @@ export default {
     background: rgb(51, 135, 245);
     color: #fff;
     width: 50 / 360 * 100vw;
-    height: 80 / 360 * 100vw;
+    height: 80px;
     border-radius: 5 / 360 * 100vw;
     text-align: center;
     font-size: 14 / 360 * 100vw;
