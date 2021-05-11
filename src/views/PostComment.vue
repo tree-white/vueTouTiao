@@ -32,7 +32,7 @@
           </div>
 
           <!-- 右边：回复按钮 -->
-          <span class="reply">回复</span>
+          <span class="reply" @click="handleReply(item)">回复</span>
         </div>
 
         <!-- 回复列表 - 递归盒子 -->
@@ -55,13 +55,14 @@
         :rows="rows"
         :autosize="!isFocus"
         type="textarea"
-        placeholder="说点什么..."
+        :placeholder="reply.user ? '回复：@ ' + reply.user.nickname : '说点什么...'"
         class="textarea"
         :class="isFocus ? 'active' : ''"
         id="textarea"
         @focus="handleFocus"
         @blur="handleBlur"
         @keyup.enter="handleSubmit"
+        ref="textarea"
       />
 
       <!-- 右边编辑按钮，当选中输入框则隐藏 -->
@@ -108,6 +109,8 @@ export default {
       pageSize: 5,
       // 记录当前的输入框是否获得焦点
       isFocus: false,
+      // 记录回复的id
+      reply: {},
     };
   },
   mounted() {
@@ -196,6 +199,23 @@ export default {
       // 失去焦点需要有一个延时，异步处理，否则无法触发发送的点击事件。
       setTimeout(()=>{
         this.isFocus = false;
+
+        // 判断失去焦点的时候输入框是否有内容，没有则清空reply
+        if(!this.message.trim()) this.reply = {};
+      },30)
+    },
+
+    // 点击回复那妞触发的事件
+    handleReply(item){
+      // 因为点击时失去焦点，已经触发了handleBlur事件
+      setTimeout(()=> {
+
+        // 记录下来当前回复的评论信息
+        this.reply = item;
+        // 打开输入框
+        this.isFocus = true;
+  
+        this.$refs.textarea.focus();
       },30)
     },
   },
