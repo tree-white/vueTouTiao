@@ -39,25 +39,8 @@
             @load="onLoad"
           >
             <PostAll :arrData="item.list" />
-
-            <!-- <div v-for="(subItem, subIndex) in item.list" :key="subIndex">
-              <OneImg
-                v-if="subItem.type == 1 && subItem.cover.length === 1"
-                :data="subItem"
-              />
-
-              <ManyImg
-                v-else-if="subItem.type == 1 && subItem.cover.length > 1"
-                :data="subItem"
-              />
-
-              <Video v-else-if="subItem.type == 2" :data="subItem" />
-            </div> -->
           </van-list>
         </van-tab>
-
-        <!-- 最后跳转管理标签页面 -->
-        <!-- <van-tab title="Ｖ" @change="handleCategoryPage"></van-tab> -->
       </van-tabs>
     </section>
   </div>
@@ -68,9 +51,6 @@
 <script>
 // 文章列表的组件
 import PostAll from "@/components/PostItem_All";
-import OneImg from "@/components/PostItem_OneImg";
-import ManyImg from "@/components/PostItem_ManyImg";
-import Video from "@/components/PostItem_Video";
 
 export default {
   name: "index",
@@ -79,7 +59,40 @@ export default {
   // 和mounted不一样，mounted只会执行一次
   activated() {
     // 初始化active,如果是从栏目管理页面回来首页，则回到第一个栏目
-    if (localStorage.getItem("fromPath") === "/category") this.active = 0;
+    if (localStorage.getItem("fromPath") === "/category") {
+      this.active = 0;
+      console.log("------------- ↓ 刷新了 Index.vue 页面 ↓ -----------------");
+
+      // 获取本地的 token 有则获取，没有则赋值为空对象
+      const { token } = JSON.parse(localStorage.getItem("userInfo")) || {};
+      // console.log(Authorization ? "有密令！" : "没有密令！");
+
+      // 把(Authorization)保存到data里面
+      this.token = token;
+
+      // 获取本地存储的栏目数据
+      const category = JSON.parse(localStorage.getItem("category"));
+      // 判断本地存储是否有数据
+      if (category) {
+        if (
+          // 如果当前是登录状态，但栏目的第一项不是"关注"，则重新请求
+          (token && category[0].name !== "关注") ||
+          // 如果当前是不是登录状态，但栏目的第一项是"关注"，则重新请求
+          (!token && category[0].name === "关注")
+        ) {
+          this.getCategory();
+        }
+        // 如果都满足，且本地有数据，则直接赋值
+        else {
+          this.category = category;
+          // 调用方法给每个栏目添加属性
+          this.handleCategories();
+        }
+      } else {
+        // category没数据，则直接请求，并保存到本地
+        this.getCategory();
+      }
+    }
   },
 
   // 进来则自动获取文章列表
@@ -262,7 +275,7 @@ export default {
   },
 
   // 注册局部组件
-  components: { PostAll, OneImg, ManyImg, Video },
+  components: { PostAll },
 
   // 监听当前点击的分类是哪一个
   watch: {
@@ -339,12 +352,13 @@ export default {
 
 /deep/ .van-tabs__wrap {
   position: relative;
-  padding-right: 49px;
 }
 
 /deep/ .van-tabs__nav {
   position: unset;
   background: #eee;
+  padding-right: 49px;
+
 
   .van-tab:nth-last-child(2) {
     position: absolute;
@@ -363,4 +377,5 @@ export default {
 /deep/ .van-tab--active {
   border-bottom: 1px solid red;
 }
+
 </style>

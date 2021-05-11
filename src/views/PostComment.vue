@@ -38,7 +38,11 @@
         <!-- 回复列表 - 递归盒子 -->
         <div class="reply-list">
           <!-- item.parent有多少层数据，CommentFloor就自调用多少次 -->
-          <CommentFloor v-if="item.parent" :data="item.parent" @reply="handleReply"/>
+          <CommentFloor
+            v-if="item.parent"
+            :data="item.parent"
+            @reply="handleReply"
+          />
         </div>
 
         <!-- 回复内容 -->
@@ -55,7 +59,9 @@
         :rows="rows"
         :autosize="!isFocus"
         type="textarea"
-        :placeholder="reply.user ? '回复：@ ' + reply.user.nickname : '说点什么...'"
+        :placeholder="
+          reply.user ? '回复：@ ' + reply.user.nickname : '说点什么...'
+        "
         class="textarea"
         :class="isFocus ? 'active' : ''"
         id="textarea"
@@ -153,40 +159,40 @@ export default {
     },
 
     // 键盘按下回车
-    handleKeyupSubmit(){
+    handleKeyupSubmit() {
       this.handleSubmit();
       this.$refs.textarea.blur();
     },
 
     // 点击"发布评论"按钮触发
-    handleSubmit(){
+    handleSubmit() {
       // 发送前先判断内容是否为空
       const content = this.message.trim();
-      if(!content) {
-        this.$toast.fail('发布内容不能为空！');
+      if (!content) {
+        this.$toast.fail("发布内容不能为空！");
         return;
       }
 
       // 获取用户的授权信息
-      const {token} = JSON.parse(localStorage.getItem('userInfo')) || {};
+      const { token } = JSON.parse(localStorage.getItem("userInfo")) || {};
 
       // data是动态，用于判断回复的外层还是内层还是评论
-      const data = { content }
+      const data = { content };
 
       // 如果回复的对象有id，则说明是回复的id，parent_id就是要回复的id
-      if(this.reply.id) data.parent_id = this.reply.id;
+      if (this.reply.id) data.parent_id = this.reply.id;
 
       // 发布评论请求
       this.$axios({
-        url: '/post_comment/' + this.pid,
-        method: 'POST',
-        headers: {Authorization: token},
+        url: "/post_comment/" + this.pid,
+        method: "POST",
+        headers: { Authorization: token },
         data,
-      }).then(res => {
+      }).then((res) => {
         // 发布成功后的信息
-        this.$toast.success(res.data.message)
+        this.$toast.success(res.data.message);
         // 清空输入框的内容
-        this.message = '';
+        this.message = "";
 
         // 手动更新数据
         this.list = []; // 必须要清空，如果不清空会合并之前的评论数据
@@ -195,39 +201,37 @@ export default {
 
         // 清空reply
         this.reply = {};
-        
-      })
+      });
     },
 
     // 输入框获得焦点触发
-    handleFocus(){
+    handleFocus() {
       this.isFocus = true;
     },
 
     // 输入框数去焦点触发
-    handleBlur(){
+    handleBlur() {
       // 失去焦点需要有一个延时，异步处理，否则无法触发发送的点击事件。
-      setTimeout(()=>{
+      setTimeout(() => {
         this.isFocus = false;
 
         // 判断失去焦点的时候输入框是否有内容，没有则清空reply
-        if(!this.message.trim()) this.reply = {};
-      },30)
+        if (!this.message.trim()) this.reply = {};
+      }, 30);
     },
 
     // 点击回复那妞触发的事件
-    handleReply(item){
+    handleReply(item) {
       console.log(item);
       // 因为点击时失去焦点，已经触发了handleBlur事件
-      setTimeout(()=> {
-
+      setTimeout(() => {
         // 记录下来当前回复的评论信息
         this.reply = item;
         // 打开输入框
         this.isFocus = true;
-  
+
         this.$refs.textarea.focus();
-      },30)
+      }, 30);
     },
   },
 };

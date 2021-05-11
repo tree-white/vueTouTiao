@@ -1,7 +1,7 @@
 <template>
   <div class="reply-item">
     <!-- 组件自己调用自己 -->
-    <commentFloor v-if="data.parent" :data="data.parent" @reply="handleReply" />
+    <commentFloor v-if="data.parent" :data="data.parent" @reply="handleReply"/>
 
     <div class="item-top">
       <div class="item-user">
@@ -36,7 +36,7 @@ export default {
     handleReply(item){
       // 触发父组件传递过来的(reply)函数
       this.$emit('reply',item);
-    }
+    },
   }
 };
 </script>
