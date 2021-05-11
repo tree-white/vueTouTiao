@@ -1,7 +1,7 @@
 <template>
   <div class="reply-item">
     <!-- 组件自己调用自己 -->
-    <commentFloor v-if="data.parent" :data="data.parent" />
+    <commentFloor v-if="data.parent" :data="data.parent" @reply="handleReply" />
 
     <div class="item-top">
       <div class="item-user">
@@ -9,7 +9,9 @@
         <em>{{ data.user.nickname }}</em>
         <span>{{ moment(data.create_date).fromNow() }}</span>
       </div>
-      <span class="item-reply">回复</span>
+
+      <!-- 点击回复按钮的时候，触发父组件传递过来的回复函数 -->
+      <span class="item-reply" @click="handleReply(data)">回复</span>
     </div>
 
     <div class="item-content">{{ data.content }}</div>
@@ -29,6 +31,13 @@ export default {
       moment,
     };
   },
+
+  methods: {
+    handleReply(item){
+      // 触发父组件传递过来的(reply)函数
+      this.$emit('reply',item);
+    }
+  }
 };
 </script>
 

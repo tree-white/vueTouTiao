@@ -38,7 +38,7 @@
         <!-- 回复列表 - 递归盒子 -->
         <div class="reply-list">
           <!-- item.parent有多少层数据，CommentFloor就自调用多少次 -->
-          <CommentFloor v-if="item.parent" :data="item.parent" />
+          <CommentFloor v-if="item.parent" :data="item.parent" @reply="handleReply"/>
         </div>
 
         <!-- 回复内容 -->
@@ -61,7 +61,7 @@
         id="textarea"
         @focus="handleFocus"
         @blur="handleBlur"
-        @keyup.enter="handleSubmit"
+        @keyup.enter="handleKeyupSubmit"
         ref="textarea"
       />
 
@@ -152,6 +152,12 @@ export default {
       this.getList();
     },
 
+    // 键盘按下回车
+    handleKeyupSubmit(){
+      this.handleSubmit();
+      this.$refs.textarea.blur();
+    },
+
     // 点击"发布评论"按钮触发
     handleSubmit(){
       // 发送前先判断内容是否为空
@@ -186,6 +192,9 @@ export default {
         this.list = []; // 必须要清空，如果不清空会合并之前的评论数据
         this.pageIndex = 1; // 把请求页数设置成第一页
         this.getList(); // 获取列表数据
+
+        // 清空reply
+        this.reply = {};
         
       })
     },
@@ -208,6 +217,7 @@ export default {
 
     // 点击回复那妞触发的事件
     handleReply(item){
+      console.log(item);
       // 因为点击时失去焦点，已经触发了handleBlur事件
       setTimeout(()=> {
 
