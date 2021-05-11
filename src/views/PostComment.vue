@@ -164,22 +164,23 @@ export default {
       // 获取用户的授权信息
       const {token} = JSON.parse(localStorage.getItem('userInfo')) || {};
 
+      // data是动态，用于判断回复的外层还是内层还是评论
+      const data = { content }
+
+      // 如果回复的对象有id，则说明是回复的id，parent_id就是要回复的id
+      if(this.reply.id) data.parent_id = this.reply.id;
+
       // 发布评论请求
       this.$axios({
         url: '/post_comment/' + this.pid,
         method: 'POST',
         headers: {Authorization: token},
-        data: {content}
+        data,
       }).then(res => {
         // 发布成功后的信息
         this.$toast.success(res.data.message)
         // 清空输入框的内容
         this.message = '';
-
-        // 把页数回调到1
-        // this.pageIndex = 1;
-        // 更新数据
-        // this.getList();
 
         // 手动更新数据
         this.list = []; // 必须要清空，如果不清空会合并之前的评论数据
