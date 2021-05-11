@@ -1,39 +1,75 @@
 <template>
-  <div>
+  <div class="container">
     <!-- 头部 -->
     <Titlebar title="精彩跟帖" showBack="true" />
 
-    <!-- 跟帖评论列表 -->
-    <div class="comment" v-for="(item, index) in list" :key="index">
-      <!-- 用户信息 / 回复 -->
-      <div class="comment-top">
-        <!-- 左边：头像/昵称/跟帖时间 -->
-        <div class="user">
-          <!-- 左边头像 -->
-          <img
-            :src="$axios.defaults.baseURL + item.user.head_img"
-          />
+    <!-- loading：是否加载中 -->
+    <!-- finished：数据是否加载完成 -->
+    <!-- @load：触发加载事件 -->
+    <!-- immediate-check：是否初始化立即触发 -->
+    <van-list
+      :immediate-check="false"
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <!-- 跟帖评论列表 -->
+      <div class="comment" v-for="(item, index) in list" :key="index">
+        <!-- 用户信息 / 回复 -->
+        <div class="comment-top">
+          <!-- 左边：头像/昵称/跟帖时间 -->
+          <div class="user">
+            <!-- 左边头像 -->
+            <img :src="$axios.defaults.baseURL + item.user.head_img" />
 
-          <!-- 右边昵称/时间 -->
-          <div class="user-info">
-            <p>{{ item.user.nickname }}</p>
-            <!-- moment().fromNow() 显示距离到当前的时间 -->
-            <span>{{ moment(item.create_date).fromNow() }}</span>
+            <!-- 右边昵称/时间 -->
+            <div class="user-info">
+              <p>{{ item.user.nickname }}</p>
+              <!-- moment().fromNow() 显示距离到当前的时间 -->
+              <span>{{ moment(item.create_date).fromNow() }}</span>
+            </div>
           </div>
+
+          <!-- 右边：回复按钮 -->
+          <span class="reply">回复</span>
         </div>
 
-        <!-- 右边：回复按钮 -->
-        <span class="reply">回复</span>
-      </div>
+        <!-- 回复列表 - 递归盒子 -->
+        <div class="reply-list">
+          <!-- item.parent有多少层数据，CommentFloor就自调用多少次 -->
+          <CommentFloor v-if="item.parent" :data="item.parent" />
+        </div>
 
-      <!-- 回复列表 - 递归盒子 -->
-      <div class="reply-list">
-        <!-- item.parent有多少层数据，CommentFloor就自调用多少次 -->
-        <CommentFloor v-if="item.parent" :data="item.parent"/>
+        <!-- 回复内容 -->
+        <div class="content">{{ item.content }}</div>
       </div>
+    </van-list>
 
-      <!-- 回复内容 -->
-      <div class="content">{{ item.content }}</div>
+    <!-- 底部发布/回复信息栏 -->
+
+    <div class="publish">
+      <!-- 输入框，点击和每点击时候显示的效果不一样的 -->
+      <van-field
+        v-model="message"
+        :rows="rows"
+        :autosize="!isFocus"
+        type="textarea"
+        placeholder="说点什么..."
+        class="textarea"
+        :class="isFocus ? 'active' : ''"
+        id="textarea"
+        @focus="isFocus = true"
+        @blur="isFocus = false"
+      />
+
+      <!-- 右边编辑按钮，当选中输入框则隐藏 -->
+      <label for="textarea">
+        <div class="iconfont icon-17" v-show="!isFocus"></div>
+      </label>
+
+      <!-- 发送按钮，当选中输入框的时候显示 -->
+      <span class="send" v-show="isFocus">发布</span>
     </div>
   </div>
 </template>
@@ -46,18 +82,31 @@ import CommentFloor from "@/components/CommentFloor";
 // moment时间处理组件
 import moment from "moment";
 // 转换过继语言，zh-CN 就是中文
-moment.locale('zh-CN');
+moment.locale("zh-CN");
 
 export default {
   components: { Titlebar, CommentFloor },
   data() {
     return {
+      // 发布评论的数据
+      message: "",
+      // 输入框显示的行数
+      rows: 1,
+      //List分页组件
+      loading: false,
+      finished: false,
       // 激活时间组件
       moment,
       // 文章id
       pid: "",
       // 评论的列表
       list: [],
+      // 请求的页数
+      pageIndex: 1,
+      // 请求的条数
+      pageSize: 5,
+      // 记录当前的输入框是否获得焦点
+      isFocus: false,
     };
   },
   mounted() {
@@ -74,18 +123,39 @@ export default {
     getList() {
       this.$axios({
         url: `/post_comment/${this.pid}`,
+        params: {
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize,
+        },
       }).then((res) => {
         // data是评论的列表数组
         const { data } = res.data;
         // 保存到data的list数组中
-        this.list = data;
+        this.list = [...this.list, ...data];
+        // 请求完毕后，页数需要+1
+        this.pageIndex++;
+        // 初始化分页相关的值
+        this.loading = false;
+        // 数据请求完毕
+        if (data.length < this.pageSize) {
+          this.finished = true;
+        }
       });
+    },
+
+    // 触发加载事件
+    onLoad() {
+      this.getList();
     },
   },
 };
 </script>
 
 <style scoped lang="less">
+.container {
+  padding-bottom: 60 / 360 * 100vw;
+}
+
 .comment {
   padding: 20 / 360 * 100vw;
   border-bottom: 1px solid #ddd;
@@ -128,4 +198,46 @@ export default {
   }
 }
 
+.publish {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5 / 360 * 100vw 20 / 360 * 100vw;
+  background: #fff;
+
+  .icon-17 {
+    font-size: 30 / 360 * 100vw;
+    margin-left: 5 / 360 * 100vw;
+  }
+
+  .textarea {
+    background: #eee;
+    border-radius: 5 / 360 * 100vw;
+    padding: 5 / 360 * 100vw 10 / 360 * 100vw;
+  }
+
+  .active {
+    height: 81px !important;
+  }
+
+  .send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5 / 360 * 100vw;
+    background: rgb(51, 135, 245);
+    color: #fff;
+    width: 50 / 360 * 100vw;
+    height: 80 / 360 * 100vw;
+    border-radius: 5 / 360 * 100vw;
+    text-align: center;
+    font-size: 14 / 360 * 100vw;
+    box-shadow: 0 0 3px 3px rgba(255, 255, 255, 0.3),
+      inset 0 0 8px 3px rgba(255, 255, 255, 0.3);
+  }
+}
 </style>

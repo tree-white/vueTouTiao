@@ -23,7 +23,7 @@ Vue.prototype.$axios = axios;
 // axios.defaults.baseURL = 'http://localhost:3000';
 
 // 线上数据库
-axios.defaults.baseURL = 'http://192.168.1.3:3000';
+axios.defaults.baseURL = 'http://192.168.1.10:3000';
 
 // 注册 Vant 插件 （Vue.use都是用来注册插件的）
 Vue.use(Vant);
